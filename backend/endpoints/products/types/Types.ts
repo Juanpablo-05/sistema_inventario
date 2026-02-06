@@ -1,9 +1,18 @@
-type Campos = {
+type CamposCreateProducts = {
     nombre: string;
-    precio: string;
+    precio: string | number;
     fecha_agregado: string;
     fecha_caducidad: string;
-    Id_categoria_PK: string;
+    stock_actual: number;
+    Id_categoria_PK: string | number;
 }
 
-export {Campos} 
+type CamposUpdateProducts = {
+    nombre?: string;
+    precio?: string | number;
+    fecha_agregado?: string;
+    fecha_caducidad?: string;
+    stock_actual?: number;
+    Id_categoria_PK?: string | number;
+}
+export {CamposCreateProducts, CamposUpdateProducts} 
