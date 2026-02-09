@@ -5,6 +5,8 @@ import { Request, Response } from "express";
 export async function editProduct(req: Request, res: Response) {
     const { id } = req.params;
     const productId = Number(id);
+
+    // Validar que el ID del producto sea un número entero positivo
     if (Number.isNaN(productId) || productId <= 0) {
         return res.status(400).json({ error: "ID de producto inválido" });
     }
@@ -18,6 +20,8 @@ export async function editProduct(req: Request, res: Response) {
         stock_actual 
     }: CamposUpdateProducts = req.body
 
+    // Validación de campos (solo si están presentes en el cuerpo de la solicitud)
+
     if (nombre !== undefined && typeof nombre !== "string") {
         return res.status(400).json({ error: "Nombre de producto inválido" });
     }
@@ -26,6 +30,8 @@ export async function editProduct(req: Request, res: Response) {
     if (precioNumber !== null && (Number.isNaN(precioNumber) || precioNumber < 0)) {
         return res.status(400).json({ error: "Precio inválido" });
     }
+
+    // Validar que las fechas sean válidas y que la fecha de caducidad no sea anterior a la fecha de agregado
 
     const fechaAg = fecha_agregado !== undefined ? normalizeDateOnly(fecha_agregado) : null;
     if (fecha_agregado !== undefined && !fechaAg) {
@@ -41,11 +47,15 @@ export async function editProduct(req: Request, res: Response) {
         return res.status(400).json({ error: "La fecha de caducidad no puede ser anterior a la fecha de agregado" });
     }
 
+    // Validar que Id_categoria_PK sea un número entero positivo
+
     const categoriaId = Id_categoria_PK !== undefined ? Number(Id_categoria_PK) : null;
     if (categoriaId !== null && (Number.isNaN(categoriaId) || categoriaId <= 0)) {
         return res.status(400).json({ error: "Id_categoria_PK inválido" });
     }
 
+
+    // Validar que stock_actual sea un número entero no negativo
     const stockNumber = stock_actual !== undefined ? Number(stock_actual) : null;
     if (stockNumber !== null && (Number.isNaN(stockNumber) || stockNumber < 0)) {
         return res.status(400).json({ error: "stock_actual inválido" });
@@ -76,6 +86,8 @@ export async function editProduct(req: Request, res: Response) {
         console.log(req.body + " " + error);
     }
 }
+
+// Funciones auxiliares para normalizar y validar fechas
 
 function normalizeDateOnly(value?: string): string | null {
     if (!value || typeof value !== "string") return null;

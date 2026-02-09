@@ -9,6 +9,8 @@ export async function createCategori(req: Request, res: Response) {
         estado?: "activo" | "inactivo";
     };
 
+    // Validación de datos 
+
     if (!nombre || typeof nombre !== "string") {
         return res.status(400).json({ error: "Nombre de categoría inválido" });
     }

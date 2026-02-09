@@ -12,6 +12,8 @@ export async function createProduct(req: Request, res: Response) {
         Id_categoria_PK,
     }: CamposCreateProducts = req.body;
 
+    // Validación de campos
+
     if (!nombre || typeof nombre !== "string") {
         return res.status(400).json({ error: "Nombre de producto inválido" });
     }
@@ -30,18 +32,21 @@ export async function createProduct(req: Request, res: Response) {
         return res.status(400).json({ error: "La fecha de caducidad no puede ser anterior a la fecha de agregado" });
     }
 
+    // Validar que precio sea un número positivo
     const precioNumber = Number(precio);
     if (Number.isNaN(precioNumber) || precioNumber < 0) {
         return res.status(400).json({ error: "Precio inválido" });
     }
 
+    // Validar que Id_categoria_PK sea un número entero positivo
     const categoriaId = Number(Id_categoria_PK);
     if (Number.isNaN(categoriaId) || categoriaId <= 0) {
         return res.status(400).json({ error: "Id_categoria_PK inválido" });
     }
 
+    // Validar que stock_actual sea un número entero no negativo
     const stock_cantity = Number(stock_actual);
-    if (Number.isNaN(stock_cantity) || stock_cantity < 0) {
+    if (Number.isNaN(stock_cantity) || stock_cantity < 0 || !Number.isInteger(stock_cantity)) {
         return res.status(400).json({ error: "stock_actual inválido" });
     }
 
@@ -68,6 +73,7 @@ export async function createProduct(req: Request, res: Response) {
     }
 }
 
+// Funciones auxiliares para normalizar y validar fechas
 function normalizeDateOnly(value?: string): string | null {
     if (!value || typeof value !== "string") return null;
     const trimmed = value.trim();

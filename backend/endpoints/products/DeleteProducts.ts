@@ -4,6 +4,8 @@ import { Request, Response } from "express";
 export async function deleteProduct(req: Request, res: Response) {
   const { id } = req.params;
   const productId = Number(id);
+
+  // Validar que el ID del producto sea un número entero positivo
   if (Number.isNaN(productId) || productId <= 0) {
     return res.status(400).json({ error: "ID de producto inválido" });
   }

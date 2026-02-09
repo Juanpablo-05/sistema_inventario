@@ -5,6 +5,7 @@ export async function editCategori(req: Request, res: Response) {
     const { id } = req.params;
     const categoriId = Number(id);
     
+    // Validación de ID de categoría, asegurando que sea un número positivo
     if (isNaN(categoriId) || categoriId <= 0) {
         return res.status(400).json({ error: "ID de categoría inválido" });
     }
@@ -14,6 +15,8 @@ export async function editCategori(req: Request, res: Response) {
         descripcion?: string;
         estado?: "activo" | "inactivo";
     };
+
+    // Validación de datos de actualización, permitiendo campos opcionales pero validando su formato si están presentes
 
     if (nombre !== undefined && typeof nombre !== "string") {
         return res.status(400).json({ error: "Nombre de categoría inválido" });

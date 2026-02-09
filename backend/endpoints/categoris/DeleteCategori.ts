@@ -4,6 +4,8 @@ import { Request, Response } from "express";
 export async function deleteCategori(req: Request, res: Response) {
     const { id } = req.params;
     const categoriId = Number(id);
+
+    // Validación de ID de categoría, asegurando que sea un número positivo
     if (isNaN(categoriId) || categoriId <= 0) {
         return res.status(400).json({ error: "ID de categoría inválido" });
     }
