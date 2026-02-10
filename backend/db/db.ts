@@ -9,11 +9,6 @@ export const db = mysql.createPool({
     port: Number(opc.DB_PORT ?? 3306),
 });
 
-export async function pingDb(): Promise<boolean> {
-    const [rows] = await db.promise().query("SELECT nombre FROM productos ");
-    return Array.isArray(rows) && rows.length > 0;
-}
-
 export function logDbConnectionStatus(): void {
     db.getConnection((err, connection) => {
         if (err) {
