@@ -1,10 +1,10 @@
-import { StrictMode } from 'react'
+import { ApiProvider } from "./context/ApiContext";
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+  <ApiProvider baseUrl="http://localhost:3000">
     <App />
-  </StrictMode>,
+  </ApiProvider>,
 )
