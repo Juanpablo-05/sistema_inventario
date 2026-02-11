@@ -1,12 +1,19 @@
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
-import { useState } from 'react';
-import { useCategorias } from '../../../hooks/useCategorias';
+import { useState } from "react";
 
-function ModalCreate() {
+import '../../../css/modals/modals.css'
 
-    const { categorias, createCategoria } = useCategorias();
+type ModalCreateProps = {
+    onCreate: (input: {
+        nombre: string;
+        descripcion?: string;
+        estado?: "activo" | "inactivo";
+    }) => Promise<void>;
+};
+
+function ModalCreate({ onCreate }: ModalCreateProps) {
     const [nombre, setNombre] = useState("");
     const [descripcion, setDescripcion] = useState("");
     const [estado, setEstado] = useState<"activo" | "inactivo">("activo");
@@ -24,68 +31,69 @@ function ModalCreate() {
         if (!nombreTrim) return;
         setSaving(true);
         try {
-            await createCategoria({
+            await onCreate({
             nombre: nombreTrim,
             descripcion: descripcionTrim ? descripcionTrim : undefined,
             estado,
             });
             setNombre("");
             setDescripcion("");
+            handleClose();
         } finally {
             setSaving(false);
-            console.log(categorias);
         }
     }
 
     return (
         <>
-            <button
-                onClick={handleShow}
-                className="btn_create-category">
+            <button onClick={handleShow} className="btn_create-category">
             Crear categoría
             </button>
 
-            <Modal show={show} onHide={handleClose}>
+            <Modal
+            show={show}
+            onHide={handleClose}
+            backdrop="static"
+            keyboard={false}
+            >
             <Modal.Header closeButton>
                 <Modal.Title>Modal heading</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <form
                 onSubmit={handleSubmit}
-                style={{ display: "grid", gap: 8, marginBottom: 16 }}
+                className="form_create-category"
                 >
-                <input
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                    placeholder="Nombre"
-                />
-                <input
-                    value={descripcion}
-                    onChange={(e) => setDescripcion(e.target.value)}
-                    placeholder="Descripción (opcional)"
-                />
-                <select
-                    value={estado}
-                    onChange={(e) =>
-                    setEstado(e.target.value as "activo" | "inactivo")
-                    }
-                >
-                    <option value="activo">Activo</option>
-                    <option value="inactivo">Inactivo</option>
-                </select>
-                <button type="submit" disabled={saving}>
-                    {saving ? "Guardando..." : "Crear categoría"}
-                </button>
+                    <input
+                        value={nombre}
+                        onChange={(e) => setNombre(e.target.value)}
+                        placeholder="Nombre"
+                        required
+                    />
+                    <input
+                        value={descripcion}
+                        onChange={(e) => setDescripcion(e.target.value)}
+                        placeholder="Descripción"
+                        required
+                    />
+                    <select
+                        value={estado}
+                        onChange={(e) =>
+                        setEstado(e.target.value as "activo" | "inactivo")
+                        }
+                    >
+                        <option value="activo">Activo</option>
+                        <option value="inactivo">Inactivo</option>
+                    </select>
+                        
+                    <Button variant="secondary" onClick={handleClose}>
+                        Cancelar
+                    </Button>
+                    <Button type="submit" disabled={saving} variant="primary">
+                        {saving ? "Guardando..." : "Crear categoría"}
+                    </Button>
                 </form>
             </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                Close
-                </Button>
-                <Button variant="primary" onClick={handleClose}>
-                Save Changes
-                </Button>
-            </Modal.Footer>
             </Modal>
         </>
     );

@@ -1,12 +1,14 @@
 import { useState } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import { useCategorias} from "../../../hooks/useCategorias";
 import { IoTrash } from "react-icons/io5";
 
-function ModalDelete({ id }: { id: number }) {
-    
-    const { deleteCategoria } = useCategorias();
+type ModalDeleteProps = {
+    id: number;
+    onDelete: (id: number) => Promise<void>;
+};
+
+function ModalDelete({ id, onDelete }: ModalDeleteProps) {
 
     const [show, setShow] = useState(false);
     const [deleting, setDeleting] = useState(false);
@@ -17,7 +19,7 @@ function ModalDelete({ id }: { id: number }) {
     async function handleDelete() {
         setDeleting(true);
         try {
-            await deleteCategoria(id);
+            await onDelete(id);
             handleClose();
         } finally {
             setDeleting(false);

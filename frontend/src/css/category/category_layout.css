@@ -5,13 +5,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: flex-start;
+    gap: 16px;
+    min-height: 0;
 
     .container_category-header {
         width: 80%;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        margin: 25px 0 25px 0;
 
         h2 {
             color: #000;
@@ -48,13 +51,15 @@
 
     .table_category {
             width: 80%;
-            height: 50%;
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            overflow-x: auto;
             border-collapse: collapse;
             text-align: left;
 
             table{
                 width: 100%;
-                height: 100%;
                 border-collapse:separate;
 
                 thead {
@@ -63,6 +68,9 @@
                 font-size: 18px;
                 letter-spacing: 1px;
                 text-align: center;
+                position: sticky;
+                top: 0;
+                z-index: 1;
 
                 tr {
                     th {

@@ -27,6 +27,12 @@ type CreateCategoriaInput = {
   estado?: "activo" | "inactivo";
 };
 
+type UpdateCategoriaInput = {
+  nombre?: string;
+  descripcion?: string;
+  estado?: "activo" | "inactivo";
+};
+
 export function useCategorias() {
   const { request } = useApi();
   const [categorias, setCategorias] = useState<
@@ -92,6 +98,22 @@ export function useCategorias() {
     [request, fetchCategorias],
   );
 
+  const updateCategoria = useCallback(
+    async (id: number, input: UpdateCategoriaInput) => {
+      setError(null);
+      await request(`/categories/edit/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          nombre: input.nombre,
+          descripcion: input.descripcion,
+          estado: input.estado,
+        }),
+      });
+      await fetchCategorias();
+    },
+    [request, fetchCategorias],
+  );
+
   useEffect(() => {
     void fetchCategorias();
   }, [fetchCategorias]);
@@ -102,6 +124,7 @@ export function useCategorias() {
     error,
     reload: fetchCategorias,
     createCategoria,
-    deleteCategoria
+    deleteCategoria,
+    updateCategoria,
   };
 }
