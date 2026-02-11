@@ -8,17 +8,17 @@ export type Categoria = {
   estado: "activo" | "inactivo";
 };
 
-export type GetCategoriasResponse = {
+type CategoriasApiItem = {
   id: number;
   nombre: string;
   descripcion?: string | null;
   estado: "activo" | "inactivo";
-  createdAt: string;
-  updatedAt: string;
+  created_at?: string | null;
+  updated_at?: string | null;
 };
 
 type CategoriasResponse = {
-  categorias: GetCategoriasResponse[];
+  categorias: CategoriasApiItem[];
 };
 
 type CreateCategoriaInput = {
@@ -29,7 +29,14 @@ type CreateCategoriaInput = {
 
 export function useCategorias() {
   const { request } = useApi();
-  const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const [categorias, setCategorias] = useState<
+    Array<
+      Omit<CategoriasApiItem, "created_at" | "updated_at"> & {
+        createdAt?: string | null;
+        updatedAt?: string | null;
+      }
+    >
+  >([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,7 +45,17 @@ export function useCategorias() {
     setError(null);
     try {
       const data = await request<CategoriasResponse>("/categories/get");
-      setCategorias(Array.isArray(data.categorias) ? data.categorias : []);
+      const list = Array.isArray(data.categorias) ? data.categorias : [];
+      setCategorias(
+        list.map((c) => ({
+          id: c.id,
+          nombre: c.nombre,
+          descripcion: c.descripcion ?? null,
+          estado: c.estado,
+          createdAt: c.created_at ?? null,
+          updatedAt: c.updated_at ?? null,
+        })),
+      );
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Error al cargar categorías",

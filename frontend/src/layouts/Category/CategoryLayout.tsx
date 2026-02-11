@@ -1,74 +1,59 @@
-import { useState } from "react";
 import { useCategorias } from "../../hooks/useCategorias";
-import { IoTrash } from "react-icons/io5";
+import { IoReload, IoSearch } from "react-icons/io5";
+
+import ModalDelete from "../../components/modals/category/ModalDelete";
+import ModalCreate from "../../components/modals/category/ModalCreate";
+
+import formatDate from "../../utils/normalize";
+
+import '../../css/category/category_layout.css'
 
 function CategoryLayout() {
-  const { categorias, loading, error, createCategoria, deleteCategoria, reload } = useCategorias();
-  const [nombre, setNombre] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [estado, setEstado] = useState<"activo" | "inactivo">("activo");
-  const [saving, setSaving] = useState(false);
+  const { categorias, loading, error, reload } = useCategorias();
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const nombreTrim = nombre.trim();
-    const descripcionTrim = descripcion.trim();
-    if (!nombreTrim) return;
-    setSaving(true);
-    try {
-      await createCategoria({
-        nombre: nombreTrim,
-        descripcion: descripcionTrim ? descripcionTrim : undefined,
-        estado,
-      });
-      setNombre("");
-      setDescripcion("");
-    } finally {
-      setSaving(false);
-      console.log(categorias)
-    }
-  }
+  return (
+    <div className="container_category-layout">
+      <div className="container_category-header">
+        <h2>Categorías</h2>
+        <div className="container_category-header-btns">
+          <ModalCreate />
 
-  return (  
-    <div style={{ maxWidth: 520, margin: "32px auto", fontFamily: "sans-serif" }}>
-      <h2>Categorías</h2>
-
-      <form onSubmit={handleSubmit} style={{ display: "grid", gap: 8, marginBottom: 16 }}>
-        <input
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-          placeholder="Nombre"
-        />
-        <input
-          value={descripcion}
-          onChange={(e) => setDescripcion(e.target.value)}
-          placeholder="Descripción (opcional)"
-        />
-        <select value={estado} onChange={(e) => setEstado(e.target.value as "activo" | "inactivo")}>
-          <option value="activo">Activo</option>
-          <option value="inactivo">Inactivo</option>
-        </select>
-        <button type="submit" disabled={saving}>
-          {saving ? "Guardando..." : "Crear categoría"}
-        </button>
-      </form>
-
-      <button onClick={reload} disabled={loading}>
-        {loading ? "Cargando..." : "Recargar"}
-      </button>
+          <button onClick={reload} disabled={loading} className="btn_reload">
+            {loading ? <IoSearch className="icon-spin" /> : <IoReload />}
+          </button>
+        </div>
+      </div>
 
       {error ? <p style={{ color: "crimson" }}>{error}</p> : null}
 
-      <ul>
-        {categorias.map((c) => (
-          <li key={c.id}>
-            {c.nombre} {c.estado === "inactivo" ? "(inactiva)" : ""} 
-            <button onClick={() => deleteCategoria(c.id)} style={{ marginLeft: 8 }}>
-              <IoTrash color="crimson" size={20}/> 
-            </button>
-          </li>
-        ))}
-      </ul>
+      <div className="table_category">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Descripción</th>
+              <th>Estado</th>
+              <th>Fecha de creación</th>
+              <th>Fecha de edición</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {categorias.map((categoria) => (
+              <tr key={categoria.id}>
+                <td>{categoria.nombre}</td>
+                <td>{categoria.descripcion || "-"}</td>
+                <td>{categoria.estado}</td>
+                <td>{formatDate(categoria.createdAt)}</td>
+                <td>{formatDate(categoria.updatedAt)}</td>
+                <td>
+                  <ModalDelete id={categoria.id} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

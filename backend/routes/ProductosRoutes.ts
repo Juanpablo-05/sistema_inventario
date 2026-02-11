@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { createProduct } from "../endpoints/products/CreateProducts";
-import { getProducts } from "../endpoints/products/GetProducts";
-import { editProduct } from "../endpoints/products/EditProducts";
-import { deleteProduct } from "../endpoints/products/DeleteProducts";
+import { createProduct } from "../models/products/CreateProducts";
+import { getProducts } from "../models/products/GetProducts";
+import { editProduct } from "../models/products/EditProducts";
+import { deleteProduct } from "../models/products/DeleteProducts";
 
 const route = Router();
 

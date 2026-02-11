@@ -1,7 +1,7 @@
-import { editCategori } from "../endpoints/categoris/EditCategori";
-import { createCategori } from "../endpoints/categoris/CreateCategori";
-import { deleteCategori } from "../endpoints/categoris/DeleteCategori";
-import { getCategori } from "../endpoints/categoris/Getcategori";
+import { editCategori } from "../models/categoris/EditCategori";
+import { createCategori } from "../models/categoris/CreateCategori";
+import { deleteCategori } from "../models/categoris/DeleteCategori";
+import { getCategori } from "../models/categoris/Getcategori";
 
 import { Router } from "express";
 

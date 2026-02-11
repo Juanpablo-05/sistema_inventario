@@ -8,7 +8,7 @@ import {
   IoBag
 } from "react-icons/io5";
 
-import './layouts/css/side_bar.css'
+import './css/side_bar.css'
 
 function App() {
 

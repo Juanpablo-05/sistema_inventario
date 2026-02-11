@@ -1,0 +1,90 @@
+.container_category-layout {
+    width: 100%;
+    height: 100vh;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+
+    .container_category-header {
+        width: 80%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        h2 {
+            color: #000;
+            font-size: 36px;
+            letter-spacing: 2px;
+            font-weight: 600;
+
+        }
+
+        .container_category-header-btns {
+            width: 40%;
+            height: 50%;
+            display: flex;
+            align-items: center;    
+            justify-content: space-evenly;
+
+            .btn_reload{
+                background: var(--color-btn-secondary);
+                border: none;
+                padding: 10px 20px;
+                cursor: pointer;
+                font-size: 16px;
+                color: #000;
+                transition: all 0.3s ease;
+
+                &:hover {
+                    border-radius: 15px;
+                    background: var(--color-btn-secondary-hover);
+                    transition: all 0.3s ease ;
+                }
+            }
+        }
+    }
+
+    .table_category {
+            width: 80%;
+            height: 50%;
+            border-collapse: collapse;
+            text-align: left;
+
+            table{
+                width: 100%;
+                height: 100%;
+                border-collapse:separate;
+
+                thead {
+                background: var(--color-primary);
+                color: #fff;
+                font-size: 18px;
+                letter-spacing: 1px;
+                text-align: center;
+
+                tr {
+                    th {
+                        padding: 5px;
+                    }
+                }
+            }
+
+            tbody {
+                text-align: center;
+                tr {
+                    &:nth-child(even) {
+                        background: var(--color-table-row-even);
+                    }
+                }
+
+                td {
+                    padding: 10px;
+                    font-size: 16px;
+                    color: #000;
+                }
+            }
+            }
+    }
+}
