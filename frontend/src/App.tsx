@@ -4,8 +4,8 @@ import {
   IoClose,
   IoMenu,
   IoBarChart,
-  IoCar,
   IoFileTraySharp,
+  IoBag
 } from "react-icons/io5";
 
 import './layouts/css/side_bar.css'
@@ -29,27 +29,33 @@ function App() {
           <div className="side_bar-category">
             {isActive
               ?            
-                <p>categorias</p>
+                <button className="side_bar-category-btn">categorias</button>
               
               :
-              <IoCar color="white" size={26}/>
+              <button className="btn_categoty-io">
+                <IoBag color="white" size={20} />
+              </button>
             }
           </div>
           <div className="side_bar-products">
             { isActive
               ?
-                <p>productos</p>            
+                <button className="side_bar-products-btn">productos</button>            
               :
-              <IoFileTraySharp color="white" size={26}/>
+                <button className="btn_products-io">
+                  <IoFileTraySharp color="white" size={20}/>
+                </button>
 
             }
           </div>
           <div className="side_bar-movement">
             {isActive
               ?
-                <p>movimientos</p>
+                <button className="side_bar-movement-btn">movimientos</button>
               :
-                <IoBarChart color="white" size={26}/>
+                <button className="btn_movement-io">
+                  <IoBarChart color="white" size={20}/>
+                </button>
             } 
           </div>
         </div>

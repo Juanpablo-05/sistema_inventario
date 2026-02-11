@@ -8,8 +8,17 @@ export type Categoria = {
   estado: "activo" | "inactivo";
 };
 
+export type GetCategoriasResponse = {
+  id: number;
+  nombre: string;
+  descripcion?: string | null;
+  estado: "activo" | "inactivo";
+  createdAt: string;
+  updatedAt: string;
+};
+
 type CategoriasResponse = {
-  categorias: Categoria[];
+  categorias: GetCategoriasResponse[];
 };
 
 type CreateCategoriaInput = {
@@ -55,6 +64,17 @@ export function useCategorias() {
     [request, fetchCategorias],
   );
 
+  const deleteCategoria = useCallback(
+    async (id: number) => {
+      setError(null);
+      await request(`/categories/delete/${id}`, {
+        method: "DELETE",
+      });
+      await fetchCategorias();
+    },
+    [request, fetchCategorias],
+  );
+
   useEffect(() => {
     void fetchCategorias();
   }, [fetchCategorias]);
@@ -65,5 +85,6 @@ export function useCategorias() {
     error,
     reload: fetchCategorias,
     createCategoria,
+    deleteCategoria
   };
 }

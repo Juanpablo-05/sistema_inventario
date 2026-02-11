@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useCategorias } from "../../hooks/useCategorias";
+import { IoTrash } from "react-icons/io5";
 
 function CategoryLayout() {
-  const { categorias, loading, error, createCategoria, reload } = useCategorias();
+  const { categorias, loading, error, createCategoria, deleteCategoria, reload } = useCategorias();
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [estado, setEstado] = useState<"activo" | "inactivo">("activo");
@@ -24,10 +25,11 @@ function CategoryLayout() {
       setDescripcion("");
     } finally {
       setSaving(false);
+      console.log(categorias)
     }
   }
 
-  return (
+  return (  
     <div style={{ maxWidth: 520, margin: "32px auto", fontFamily: "sans-serif" }}>
       <h2>Categorías</h2>
 
@@ -60,7 +62,10 @@ function CategoryLayout() {
       <ul>
         {categorias.map((c) => (
           <li key={c.id}>
-            {c.nombre} {c.estado === "inactivo" ? "(inactiva)" : ""}
+            {c.nombre} {c.estado === "inactivo" ? "(inactiva)" : ""} 
+            <button onClick={() => deleteCategoria(c.id)} style={{ marginLeft: 8 }}>
+              <IoTrash color="crimson" size={20}/> 
+            </button>
           </li>
         ))}
       </ul>
