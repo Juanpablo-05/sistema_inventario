@@ -17,7 +17,7 @@
         margin: 25px 0 25px 0;
 
         h2 {
-            color: #000;
+            color: var(--color-text);
             font-size: 36px;
             letter-spacing: 2px;
             font-weight: 600;
@@ -37,7 +37,7 @@
                 padding: 10px 20px;
                 cursor: pointer;
                 font-size: 16px;
-                color: #000;
+                color: var(--color-text);
                 transition: all 0.3s ease;
 
                 &:hover {
@@ -57,6 +57,8 @@
             overflow-x: auto;
             border-collapse: collapse;
             text-align: left;
+            background: var(--color-surface);
+            border-radius: 8px;
 
             table{
                 width: 100%;
@@ -64,7 +66,7 @@
 
                 thead {
                 background: var(--color-primary);
-                color: #fff;
+                color: var(--color-text);
                 font-size: 18px;
                 letter-spacing: 1px;
                 text-align: center;
@@ -90,7 +92,7 @@
                 td {
                     padding: 10px;
                     font-size: 16px;
-                    color: #000;
+                    color: var(--color-text);
                 }
             }
             }
