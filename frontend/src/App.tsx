@@ -1,4 +1,5 @@
 import CategoryLayout from "./layouts/Category/CategoryLayout";
+import ProductLayout from "./layouts/products/ProductLayout";
 import { useState } from "react";
 import { useApi } from "./context/ApiContext";
 import {
@@ -75,7 +76,8 @@ function App() {
           </div>
         </div>
       </div>
-      <CategoryLayout />
+
+      <ProductLayout></ProductLayout>
     </div>
   );
 }

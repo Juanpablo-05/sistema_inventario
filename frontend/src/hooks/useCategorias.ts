@@ -1,13 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useApi } from "../context/ApiContext";
 
-export type Categoria = {
-  id: number;
-  nombre: string;
-  descripcion?: string | null;
-  estado: "activo" | "inactivo";
-};
-
 type CategoriasApiItem = {
   id: number;
   nombre: string;

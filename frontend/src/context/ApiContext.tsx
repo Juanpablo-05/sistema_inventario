@@ -38,12 +38,18 @@ export function ApiProvider({ baseUrl, children }: ApiProviderProps) {
 
     const request = useCallback(
         async <T,>(path: string, init: RequestInit = {}): Promise<T> => {
+            const token = localStorage.getItem("auth_token");
+            const headers = new Headers(init.headers ?? {});
+            if (!headers.has("Content-Type")) {
+                headers.set("Content-Type", "application/json");
+            }
+            if (token && !headers.has("Authorization")) {
+                headers.set("Authorization", `Bearer ${token}`);
+            }
+
             const res = await fetch(`${resolvedBase}${path}`, {
-                headers: {
-                    "Content-Type": "application/json",
-                    ...(init.headers ?? {}),
-                },
                 ...init,
+                headers,
             });
 
             if (!res.ok) {
