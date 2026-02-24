@@ -7,17 +7,21 @@ import { RowDataPacket } from "mysql2";
 type UserRow = RowDataPacket & {
     id: number;
     username: string;
-    password: number;
-    role: "admin" | "user";
+    password_hash: number;
+    numero_movimientos: number;
+    role: "admin" | "empleado";
+
+    created_at: string;
+    updated_at: string;
 };
 
 export async function login(req: Request, res: Response): Promise<void> {
-    const { username, password } = req.body as {
+    const { username, password_hash } = req.body as {
         username?: string;
-        password?: number;
+        password_hash?: number;
     };
 
-    if (!username || !password) {
+    if (!username || !password_hash) {
         res.status(400).json({ error: "username y password son obligatorios" });
         return;
     }
@@ -26,7 +30,7 @@ export async function login(req: Request, res: Response): Promise<void> {
         const [rows] = await db
             .promise()
             .query<UserRow[]>(
-                "SELECT id, username, password, role FROM users WHERE username = ? LIMIT 1",
+                "SELECT id, nombre, username, password_hash, role, numero_movimientos FROM users WHERE username = ? LIMIT 1",
                 [username],
             );
 
@@ -36,7 +40,7 @@ export async function login(req: Request, res: Response): Promise<void> {
         }
 
         const user = rows[0];
-        const isPasswordValid = password === user.password;
+        const isPasswordValid = password === user.password_hash;
 
         if (!isPasswordValid) {
             res.status(401).json({ error: "contraseña invalida" });
@@ -59,7 +63,7 @@ export async function login(req: Request, res: Response): Promise<void> {
             },
         });
     } catch (error) {
-        res.status(500).json({ error: "Error al autenticar usuario" });
+        res.status(500).json({ error: "Error al autenticar usuario" , details: error instanceof Error ? error.message : String(error) });
     }
 }
 

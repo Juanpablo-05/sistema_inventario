@@ -1,9 +1,11 @@
 import CategoryLayout from "./layouts/Category/CategoryLayout";
 import ProductLayout from "./layouts/products/ProductLayout";
 import MovementLayout from "./layouts/movements/MovementLayout";
+import LoginLayout from "./layouts/auth/LoginLayout";
 import { useState } from "react";
 import { useApi } from "./context/ApiContext";
-import { NavLink, Navigate, Route, Routes } from "react-router-dom";
+import { NavLink, Navigate, Outlet, Route, Routes } from "react-router-dom";
+import PrivateRoute from "./routes/PrivateRoute";
 import {
   IoClose,
   IoMenu,
@@ -11,15 +13,15 @@ import {
   IoFileTraySharp,
   IoBag,
   IoSunny,
-  IoMoon
+  IoMoon,
+  IoLogOutOutline
 } from "react-icons/io5";
 
 import './css/side_bar.css'
 
-function App() {
-
+function AppShell() {
   const [isActive, setIsActive] = useState(false);
-  const { isDark, toggleTheme } = useApi();
+  const { isDark, toggleTheme, logout } = useApi();
 
   const navClass =
     (baseClass: string) =>
@@ -87,16 +89,32 @@ function App() {
             <IoMoon color="black" size={20}></IoMoon>
           </div>
         </div>
+
+        <button onClick={logout} className="side_bar-btn" title="Cerrar sesion">
+          <IoLogOutOutline />
+        </button>
       </div>
 
-      <Routes>
-        <Route path="/" element={<Navigate to="/categories" replace />} />
-        <Route path="/categories" element={<CategoryLayout />} />
-        <Route path="/products" element={<ProductLayout />} />
-        <Route path="/movements" element={<MovementLayout />} />
-        <Route path="*" element={<Navigate to="/categories" replace />} />
-      </Routes>
+      <Outlet />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/login" element={<LoginLayout />} />
+
+      <Route element={<PrivateRoute />}>
+        <Route element={<AppShell />}>
+          <Route path="/" element={<Navigate to="/categories" replace />} />
+          <Route path="/categories" element={<CategoryLayout />} />
+          <Route path="/products" element={<ProductLayout />} />
+          <Route path="/movements" element={<MovementLayout />} />
+          <Route path="*" element={<Navigate to="/categories" replace />} />
+        </Route>
+      </Route>
+    </Routes>
   );
 }
 
