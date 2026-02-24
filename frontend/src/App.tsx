@@ -1,7 +1,9 @@
 import CategoryLayout from "./layouts/Category/CategoryLayout";
 import ProductLayout from "./layouts/products/ProductLayout";
+import MovementLayout from "./layouts/movements/MovementLayout";
 import { useState } from "react";
 import { useApi } from "./context/ApiContext";
+import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 import {
   IoClose,
   IoMenu,
@@ -19,6 +21,10 @@ function App() {
   const [isActive, setIsActive] = useState(false);
   const { isDark, toggleTheme } = useApi();
 
+  const navClass =
+    (baseClass: string) =>
+    ({ isActive }: { isActive: boolean }) =>
+      `${baseClass}${isActive ? " active-link" : ""}`;
 
   return (
     <div className={`container_index ${isDark ? "theme-dark" : "theme-light"}`}>
@@ -34,29 +40,35 @@ function App() {
         <div className="side_bar-content">
           <div className="side_bar-category">
             {isActive ? (
-              <button className="side_bar-category-btn">categorias</button>
+              <NavLink to="/categories" className={navClass("side_bar-category-btn")}>
+                categorias
+              </NavLink>
             ) : (
-              <button className="btn_categoty-io">
+              <NavLink to="/categories" className={navClass("btn_categoty-io")}>
                 <IoBag size={20} />
-              </button>
+              </NavLink>
             )}
           </div>
           <div className="side_bar-products">
             {isActive ? (
-              <button className="side_bar-products-btn">productos</button>
+              <NavLink to="/products" className={navClass("side_bar-products-btn")}>
+                productos
+              </NavLink>
             ) : (
-              <button className="btn_products-io">
+              <NavLink to="/products" className={navClass("btn_products-io")}>
                 <IoFileTraySharp size={20} />
-              </button>
+              </NavLink>
             )}
           </div>
           <div className="side_bar-movement">
             {isActive ? (
-              <button className="side_bar-movement-btn">movimientos</button>
+              <NavLink to="/movements" className={navClass("side_bar-movement-btn")}>
+                movimientos
+              </NavLink>
             ) : (
-              <button className="btn_movement-io">
+              <NavLink to="/movements" className={navClass("btn_movement-io")}>
                 <IoBarChart size={20} />
-              </button>
+              </NavLink>
             )}
           </div>
         </div>
@@ -77,7 +89,13 @@ function App() {
         </div>
       </div>
 
-      <ProductLayout></ProductLayout>
+      <Routes>
+        <Route path="/" element={<Navigate to="/categories" replace />} />
+        <Route path="/categories" element={<CategoryLayout />} />
+        <Route path="/products" element={<ProductLayout />} />
+        <Route path="/movements" element={<MovementLayout />} />
+        <Route path="*" element={<Navigate to="/categories" replace />} />
+      </Routes>
     </div>
   );
 }

@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { createInventoryMov } from "../models/inventory _movement/CreateInventoryMov";
-import { getInventoryMov } from "../models/inventory _movement/GetInventoryMov";
-import { editInventoryMov } from "../models/inventory _movement/EditInventoryMov";
-import { deleteInventoryMov } from "../models/inventory _movement/DeleteInventoryMov";
+import { createInventoryMov } from "../controllers/inventory _movement/CreateInventoryMov";
+import { getInventoryMov } from "../controllers/inventory _movement/GetInventoryMov";
+import { editInventoryMov } from "../controllers/inventory _movement/EditInventoryMov";
+import { deleteInventoryMov } from "../controllers/inventory _movement/DeleteInventoryMov";
 
 const router = Router();
 
