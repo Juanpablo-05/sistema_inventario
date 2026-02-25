@@ -3,25 +3,25 @@ import { Request, Response } from "express";
 import { AuthRequest, signAccessToken } from "../../middleware/Auth";
 import { db } from "../../db/db";
 import { RowDataPacket } from "mysql2";
+import bcrypt from "bcrypt";
+
 
 type UserRow = RowDataPacket & {
     id: number;
     username: string;
-    password_hash: number;
-    numero_movimientos: number;
-    role: "admin" | "empleado";
-
-    created_at: string;
-    updated_at: string;
+    password_hash: string;
+    rol: "admin" | "empleado";
 };
 
 export async function login(req: Request, res: Response): Promise<void> {
-    const { username, password_hash } = req.body as {
+    const { username, password, password_hash } = req.body as {
         username?: string;
-        password_hash?: number;
+        password?: string;
+        password_hash?: string;
     };
+    const passwordInput = password ?? password_hash;
 
-    if (!username || !password_hash) {
+    if (!username || !passwordInput) {
         res.status(400).json({ error: "username y password son obligatorios" });
         return;
     }
@@ -30,17 +30,17 @@ export async function login(req: Request, res: Response): Promise<void> {
         const [rows] = await db
             .promise()
             .query<UserRow[]>(
-                "SELECT id, nombre, username, password_hash, role, numero_movimientos FROM users WHERE username = ? LIMIT 1",
+                "SELECT id, username, password_hash, rol FROM usuarios WHERE username = ? LIMIT 1",
                 [username],
             );
 
-        if (!rows.length) {
-            res.status(401).json({ error: "Credenciales invalidas" });
+        const user = rows[0];
+        
+        if (!user) {
+            res.status(401).json({ error: "Credenciales inválidas" });
             return;
         }
-
-        const user = rows[0];
-        const isPasswordValid = password === user.password_hash;
+        const isPasswordValid = await bcrypt.compare(passwordInput, user.password_hash);
 
         if (!isPasswordValid) {
             res.status(401).json({ error: "contraseña invalida" });
@@ -50,7 +50,7 @@ export async function login(req: Request, res: Response): Promise<void> {
         const token = signAccessToken({
             id: Number(user.id),
             username: String(user.username),
-            role: String(user.role),
+            role: String(user.rol),
         });
 
         res.status(200).json({
@@ -59,7 +59,7 @@ export async function login(req: Request, res: Response): Promise<void> {
             user: {
                 id: Number(user.id),
                 username: String(user.username),
-                role: String(user.role),
+                role: String(user.rol),
             },
         });
     } catch (error) {
