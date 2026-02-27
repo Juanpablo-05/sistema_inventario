@@ -1,6 +1,7 @@
 import { db } from "../../db/db";
 import { CamposUpdateProducts } from "./types/Types";
 import { Request, Response } from "express";
+import { normalizeDateOnly, toMysqlDateTime } from "../utils/Normalize";
 
 export async function editProduct(req: Request, res: Response) {
     const { id } = req.params;
@@ -65,7 +66,7 @@ export async function editProduct(req: Request, res: Response) {
         const fechaAgDb = fechaAg ? toMysqlDateTime(fechaAg) : null;
         const fechaCadDb = fechaCad ? toMysqlDateTime(fechaCad) : null;
         const [result] = await db.promise().query(
-        "UPDATE productos SET nombre = COALESCE(?, nombre), precio = COALESCE(?, precio), fecha_agregado = COALESCE(?, fecha_agregado), fecha_caducidad = COALESCE(?, fecha_caducidad), stock_actual = COALESCE(?, stock_actual), Id_categoria_PK = COALESCE(?, Id_categoria_PK), updated_at = NOW() WHERE id = ?",
+        "UPDATE productos SET nombre_p = COALESCE(?, nombre_p), precio_p = COALESCE(?, precio_p), fecha_agregado_P = COALESCE(?, fecha_agregado_p), fecha_caducidad_p = COALESCE(?, fecha_caducidad_p), stock_actual = COALESCE(?, stock_actual), Id_categoria_PK = COALESCE(?, Id_categoria_PK), updated_at_p = NOW() WHERE id_p = ?",
             [
                 nombre ?? null,
                 precioNumber,
@@ -82,24 +83,7 @@ export async function editProduct(req: Request, res: Response) {
         }
         res.status(200).json({ message: "Producto actualizado exitosamente" });
     } catch (error) {
-        res.status(500).json({ error: "Error al actualizar el producto" });
+        res.status(500).json({ error: "Error al actualizar el producto", details: error instanceof Error ? error.message : "Error desconocido" });
         console.log(req.body + " " + error);
     }
-}
-
-// Funciones auxiliares para normalizar y validar fechas
-
-function normalizeDateOnly(value?: string): string | null {
-    if (!value || typeof value !== "string") return null;
-    const trimmed = value.trim();
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) return null;
-    const [year, month, day] = trimmed.split("-").map(Number);
-    if (month < 1 || month > 12 || day < 1 || day > 31) return null;
-    const date = new Date(Date.UTC(year, month - 1, day));
-    const iso = date.toISOString().slice(0, 10);
-    return iso === trimmed ? trimmed : null;
-}
-
-function toMysqlDateTime(dateOnly: string): string {
-    return `${dateOnly} 00:00:00`;
 }

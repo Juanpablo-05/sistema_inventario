@@ -18,7 +18,7 @@ type AuthUser = {
 
 type LoginInput = {
     username: string;
-    password: string;
+    password_hash: string;
 };
 
 type RequestOptions = RequestInit & {

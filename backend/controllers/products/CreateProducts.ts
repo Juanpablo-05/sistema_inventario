@@ -4,28 +4,28 @@ import { CamposCreateProducts } from "./types/Types";
 
 export async function createProduct(req: Request, res: Response) {
     const {
-        nombre,
-        precio,
-        fecha_agregado,
-        fecha_caducidad,
+        nombre_p,
+        precio_p,
+        fecha_agregado_p,
+        fecha_caducidad_p,
         stock_actual,
         Id_categoria_PK,
     }: CamposCreateProducts = req.body;
 
     // Validación de campos
 
-    if (!nombre || typeof nombre !== "string") {
+    if (!nombre_p || typeof nombre_p !== "string") {
         return res.status(400).json({ error: "Nombre de producto inválido" });
     }
 
-    const fechaAg = normalizeDateOnly(fecha_agregado);
+    const fechaAg = normalizeDateOnly(fecha_agregado_p);
     if (!fechaAg) {
-        return res.status(400).json({ error: "fecha_agregado inválida (YYYY-MM-DD)" });
+        return res.status(400).json({ error: "fecha_agregado_p inválida (YYYY-MM-DD)" });
     }
 
-    const fechaCad = normalizeDateOnly(fecha_caducidad);
+    const fechaCad = normalizeDateOnly(fecha_caducidad_p);
     if (!fechaCad) {
-        return res.status(400).json({ error: "fecha_caducidad inválida (YYYY-MM-DD)" });
+        return res.status(400).json({ error: "fecha_caducidad_p inválida (YYYY-MM-DD)" });
     }
 
     if (fechaCad < fechaAg) {
@@ -33,7 +33,7 @@ export async function createProduct(req: Request, res: Response) {
     }
 
     // Validar que precio sea un número positivo
-    const precioNumber = Number(precio);
+    const precioNumber = Number(precio_p);
     if (Number.isNaN(precioNumber) || precioNumber < 0) {
         return res.status(400).json({ error: "Precio inválido" });
     }
@@ -56,9 +56,9 @@ export async function createProduct(req: Request, res: Response) {
         const [result] = await db
             .promise()
             .query(
-                "INSERT INTO productos (nombre, precio, fecha_agregado, fecha_caducidad, stock_actual, Id_categoria_PK) VALUES (?, ?, ?, ?, ?, ?)",
+                "INSERT INTO productos (nombre_p, precio_p, fecha_agregado_p, fecha_caducidad_p, stock_actual, Id_categoria_PK) VALUES (?, ?, ?, ?, ?, ?)",
                 [
-                nombre,
+                nombre_p,
                 precioNumber,
                 fechaAgDb,
                 fechaCadDb,

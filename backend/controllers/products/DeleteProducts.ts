@@ -11,7 +11,7 @@ export async function deleteProduct(req: Request, res: Response) {
   }
 
   try {
-    const [result] = await db.promise().query("DELETE FROM productos WHERE id = ?", [productId]);
+    const [result] = await db.promise().query("DELETE FROM productos WHERE id_p = ?", [productId]);
     const deleteResult = result as { affectedRows: number };
     if (deleteResult.affectedRows === 0) {
       return res.status(404).json({ error: "Producto no encontrado" });

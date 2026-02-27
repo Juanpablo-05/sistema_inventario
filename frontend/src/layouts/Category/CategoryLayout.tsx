@@ -14,6 +14,7 @@ function CategoryLayout() {
 
   return (
     <div className="container_category-layout">
+      
       <div className="container_category-header">
         <h2>Categorías</h2>
         <div className="container_category-header-btns">

@@ -1,4 +1,4 @@
-.container_category-layout {
+.container_product-layout {
     width: 100%;
     height: 100vh;
     padding: 10px;
@@ -9,7 +9,7 @@
     gap: 16px;
     min-height: 0;
 
-    .container_category-header {
+    .container_product-header {
         width: 80%;
         display: flex;
         align-items: center;
@@ -17,40 +17,37 @@
         margin: 25px 0 25px 0;
 
         h2 {
-            color: var(--color-text);
-            font-size: 36px;
-            letter-spacing: 2px;
-            font-weight: 600;
-
+        color: var(--color-text);
+        font-size: 36px;
+        letter-spacing: 2px;
+        font-weight: 600;
         }
 
-        .container_category-header-btns {
-            width: 40%;
-            height: 50%;
-            display: flex;
-            align-items: center;    
-            justify-content: space-evenly;
+        .container_product-header-btns{
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        }
 
-            .btn_reload{
-                background: var(--color-btn-secondary);
-                border: none;
-                padding: 10px 20px;
-                cursor: pointer;
-                font-size: 16px;
-                color: var(--color-text);
-                transition: all 0.3s ease;
+        .btn_reload {
+        background: var(--color-btn-secondary);
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 16px;
+        color: var(--color-text);
+        transition: all 0.3s ease;
 
-                &:hover {
-                    border-radius: 15px;
-                    background: var(--color-btn-secondary-hover);
-                    transition: all 0.3s ease ;
-                }
-            }
+        &:hover {
+            border-radius: 15px;
+            background: var(--color-btn-secondary-hover);
+            transition: all 0.3s ease;
+        }
         }
     }
 
-    .table_category {
-            width: 80%;
+    .table_products{
+            width: 90%;
             flex: 1;
             min-height: 0;
             overflow-y: auto;

@@ -9,7 +9,7 @@ function LoginLayout() {
   const location = useLocation();
   const { login, isAuthenticated } = useApi();
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [password_hash, setPassword_hash] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,7 +22,7 @@ function LoginLayout() {
     setError(null);
     setLoading(true);
     try {
-      await login({ username, password });
+      await login({ username, password_hash });
       const fromPath = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname;
       navigate(fromPath || "/categories", { replace: true });
     } catch (err) {
@@ -50,8 +50,8 @@ function LoginLayout() {
         <input
           id="password"
           type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
+          value={password_hash}
+          onChange={(event) => setPassword_hash(event.target.value)}
           autoComplete="current-password"
           required
         />
