@@ -4,7 +4,7 @@ import { UserResponse } from "./types/typeUsers";
 
 export async function getUsers(req: Request, res: Response): Promise<void> { 
     try { 
-        const [rows] = await db.promise().query("SELECT id, nombre, username, rol, numero_movimientos, created_at, updated_at FROM usuarios");
+        const [rows] = await db.promise().query("SELECT id, nombre, username, email, rol, numero_movimientos, created_at, updated_at FROM usuarios");
 
         res.json(rows);
     }

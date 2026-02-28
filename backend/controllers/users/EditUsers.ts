@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 export async function editUsers(req: Request, res: Response): Promise<void> { 
     const userId = req.params.id;
 
-    const { nombre, username, password_hash, role }: userRowsEdit = req.body;
+    const { nombre, username, email, password_hash, role }: userRowsEdit = req.body;
 
     if (!userId || isNaN(Number(userId))) {
         res.status(400).json({ error: "ID de usuario inválido" });
@@ -20,6 +20,11 @@ export async function editUsers(req: Request, res: Response): Promise<void> {
 
     if (username && username.trim() === "") {
         res.status(400).json({ error: "El nombre de usuario no puede estar vacío" });
+        return;
+    }
+
+    if (email !== undefined && (typeof email !== "string" || email.trim() === "")) {
+        res.status(400).json({ error: "El email no puede estar vacío" });
         return;
     }
 
@@ -45,6 +50,12 @@ export async function editUsers(req: Request, res: Response): Promise<void> {
         fields.push("username = ?");
         params.push(username.trim());
     }
+
+    if (email !== undefined) {
+        fields.push("email = ?");
+        params.push(email.trim());
+    }
+    
 
     if (password_hash !== undefined) {
         const hashedPassword = await bcrypt.hash(password_hash, 10);

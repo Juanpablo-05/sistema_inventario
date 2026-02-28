@@ -4,10 +4,14 @@ import { userRows } from "./types/typeUsers";
 import bcrypt from "bcrypt"
 
 export async function createUser(req: Request, res: Response): Promise<void> {
-    const { nombre, username, password_hash, role, }: userRows = req.body;
+    const { nombre, username, email, password_hash, role, }: userRows = req.body;
 
     if (!username || typeof username !== "string") {
         res.status(400).json({ error: "username es requerido y debe ser una cadena de texto" });
+        return;
+    }
+    if (!email || typeof email !== "string") {
+        res.status(400).json({ error: "email es requerido y debe ser una cadena de texto" });
         return;
     }
     if (!password_hash || typeof password_hash !== "string") {
@@ -24,8 +28,8 @@ export async function createUser(req: Request, res: Response): Promise<void> {
     try {
         const hashedPassword = await bcrypt.hash(password_hash, 10);
         await db.promise().query(
-            "INSERT INTO usuarios (nombre ,username, password_hash, rol) VALUES (?, ?, ?, ?)",
-            [nombre, username, hashedPassword, role]
+            "INSERT INTO usuarios (nombre ,username, email, password_hash, rol) VALUES (?, ?, ?, ?, ?)",
+            [nombre, username, email, hashedPassword, role]
         );
         res.status(201).json({ message: "Usuario creado exitosamente" });
     } catch (error) {

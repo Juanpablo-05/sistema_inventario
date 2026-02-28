@@ -15,25 +15,25 @@ function LoginLayout() {
   const [username, setUsername] = useState("");
   const [password_hash, setPassword_hash] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | undefined>(undefined);
   const [showPassword, setShowPassword] = useState(false);
 
   if (isAuthenticated) {
-    return <Navigate to="/categories" replace />;
+    return <Navigate to="/" replace />;
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setError(undefined);
     setLoading(true);
     try {
       await login({ username, password_hash });
       const fromPath = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname;
       showSuccessAlert("¡Bienvenido!", `Has iniciado sesión como ${username}`);
-      navigate(fromPath || "/categories", { replace: true });
+      navigate(fromPath || "/", { replace: true });
     } catch (err) {
-      setError("No se pudo iniciar sesion, revisa tus credenciales e intenta de nuevo");
-      await showErrorAlert(err, error);
+      await showErrorAlert(
+        err,
+        "No se pudo iniciar sesion, revisa tus credenciales e intenta de nuevo",
+      );
     } finally {
       setLoading(false);
     }
@@ -54,11 +54,12 @@ function LoginLayout() {
       <form className="login-card" onSubmit={handleSubmit}>
         <h1>Iniciar sesion</h1>
 
-        <label htmlFor="username">Usuario</label>
+        <label htmlFor="username">Usuario o correo</label>
         <input
           id="username"
           value={username}
           onChange={(event) => setUsername(event.target.value)}
+          placeholder="usuario o correo@dominio.com"
           autoComplete="username"
           required
         />

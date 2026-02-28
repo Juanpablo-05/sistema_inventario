@@ -8,21 +8,26 @@ import bcrypt from "bcrypt";
 
 type UserRow = RowDataPacket & {
     id: number;
-    username: string;
+    username: string | null;
+    email: string | null;
     password_hash: string;
     rol: "admin" | "empleado";
 };
 
 export async function login(req: Request, res: Response): Promise<void> {
-    const { username, password, password_hash } = req.body as {
+    const { identifier, username, email, password, password_hash } = req.body as {
+        identifier?: string;
         username?: string;
+        email?: string;
         password?: string;
         password_hash?: string;
     };
+
+    const identifierInput = (identifier ?? username ?? email ?? "").trim();
     const passwordInput = password ?? password_hash;
 
-    if (!username || !passwordInput) {
-        res.status(400).json({ error: "username y password son obligatorios" });
+    if (!identifierInput || !passwordInput) {
+        res.status(400).json({ error: "identifier (username o email) y password son obligatorios" });
         return;
     }
 
@@ -30,8 +35,8 @@ export async function login(req: Request, res: Response): Promise<void> {
         const [rows] = await db
             .promise()
             .query<UserRow[]>(
-                "SELECT id, username, password_hash, rol FROM usuarios WHERE username = ? LIMIT 1",
-                [username],
+                "SELECT id, username, email, password_hash, rol FROM usuarios WHERE username = ? OR LOWER(email) = LOWER(?) LIMIT 1",
+                [identifierInput, identifierInput],
             );
 
         const user = rows[0];
@@ -47,14 +52,11 @@ export async function login(req: Request, res: Response): Promise<void> {
             return;
         }
 
-        if (user.username !== username) {
-            res.status(401).json({ error: "El nombre de usuario no coincide con ninguna cuenta registrada" });
-            return;
-        }
+        const principal = user.username ?? user.email ?? identifierInput;
 
         const token = signAccessToken({
             id: Number(user.id),
-            username: String(user.username),
+            username: String(principal),
             role: String(user.rol),
         });
 
@@ -63,7 +65,7 @@ export async function login(req: Request, res: Response): Promise<void> {
             tokenType: "Bearer",
             user: {
                 id: Number(user.id),
-                username: String(user.username),
+                username: String(principal),
                 role: String(user.rol),
             },
         });

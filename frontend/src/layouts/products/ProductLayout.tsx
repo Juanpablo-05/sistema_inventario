@@ -1,4 +1,4 @@
-import { IoSearch, IoReload } from "react-icons/io5";
+import { IoReload } from "react-icons/io5";
 import { useProductos } from "../../hooks/useProducts";
 import ModalCreateProducts from "../../components/modals/products/ModalCreateProducts";
 import ModalEditProducts from "../../components/modals/products/ModalEditProducts";
@@ -18,7 +18,7 @@ function ProductLayout() {
                 <div className="container_product-header-btns">
                     <ModalCreateProducts onCreate={createProduct} />
                     <button onClick={reload} disabled={loading} className="btn_reload">
-                        {loading ? <IoSearch className="icon-spin" /> : <IoReload />}
+                        <IoReload size={20} className={loading ? "icon-spin" : ""} />
                     </button>
                 </div>
             </div>

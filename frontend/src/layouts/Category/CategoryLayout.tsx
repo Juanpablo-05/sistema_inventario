@@ -1,5 +1,5 @@
 import { useCategorias } from "../../hooks/useCategorias";
-import { IoReload, IoSearch } from "react-icons/io5";
+import { IoReload } from "react-icons/io5";
 
 import ModalDelete from "../../components/modals/category/ModalDelete";
 import ModalCreate from "../../components/modals/category/ModalCreate";
@@ -21,7 +21,7 @@ function CategoryLayout() {
           <ModalCreate onCreate={createCategoria} />
 
           <button onClick={reload} disabled={loading} className="btn_reload">
-            {loading ? <IoSearch className="icon-spin" /> : <IoReload />}
+            <IoReload size={20} className={loading ? "icon-spin" : ""} />
           </button>
         </div>
       </div>
