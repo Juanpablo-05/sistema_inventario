@@ -1,17 +1,22 @@
 import { useState, type FormEvent } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import { IoLogInOutline } from "react-icons/io5";
+
+import { IoLogInOutline, IoEye, IoEyeOff, IoSunny, IoMoon } from "react-icons/io5";
+
 import { useApi } from "../../context/ApiContext";
+import { showErrorAlert, showSuccessAlert } from "../../utils/alerts";
 import "../../css/auth/login.css";
+
 
 function LoginLayout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, isAuthenticated } = useApi();
+  const { login, isAuthenticated, isDark, toggleTheme } = useApi();
   const [username, setUsername] = useState("");
   const [password_hash, setPassword_hash] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | undefined>(undefined);
+  const [showPassword, setShowPassword] = useState(false);
 
   if (isAuthenticated) {
     return <Navigate to="/categories" replace />;
@@ -19,14 +24,16 @@ function LoginLayout() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setError(null);
+    setError(undefined);
     setLoading(true);
     try {
       await login({ username, password_hash });
       const fromPath = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname;
+      showSuccessAlert("¡Bienvenido!", `Has iniciado sesión como ${username}`);
       navigate(fromPath || "/categories", { replace: true });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo iniciar sesion");
+      setError("No se pudo iniciar sesion, revisa tus credenciales e intenta de nuevo");
+      await showErrorAlert(err, error);
     } finally {
       setLoading(false);
     }
@@ -34,6 +41,16 @@ function LoginLayout() {
 
   return (
     <div className="login-page">
+      <button
+        type="button"
+        className="login-theme-toggle"
+        onClick={toggleTheme}
+        aria-label={isDark ? "Cambiar a tema claro" : "Cambiar a tema oscuro"}
+        title={isDark ? "Cambiar a tema claro" : "Cambiar a tema oscuro"}
+      >
+        {isDark ? <IoSunny size={18} /> : <IoMoon size={18} />}
+      </button>
+
       <form className="login-card" onSubmit={handleSubmit}>
         <h1>Iniciar sesion</h1>
 
@@ -47,18 +64,27 @@ function LoginLayout() {
         />
 
         <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          value={password_hash}
-          onChange={(event) => setPassword_hash(event.target.value)}
-          autoComplete="current-password"
-          required
-        />
+        <div className="showPassword">
+          <input
+            id="password"
+            type={showPassword ? "text" : "password"}
+            value={password_hash}
+            onChange={(event) => setPassword_hash(event.target.value)}
+            autoComplete="current-password"
+            required
+          />
+          <button
+            onClick={() => setShowPassword(!showPassword)}
+            type="button"
+            className="show-password-btn"
+            aria-label={showPassword ? "Ocultar password" : "Mostrar password"}
+            title={showPassword ? "Ocultar password" : "Mostrar password"}
+          >
+            {showPassword ? <IoEyeOff size={20} /> : <IoEye size={20} />}
+          </button>
+        </div>
 
-        {error ? <p className="login-error">{error}</p> : null}
-
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading} className="login-submit-btn">
           <IoLogInOutline size={18} />
           <span>{loading ? "Entrando..." : "Entrar"}</span>
         </button>

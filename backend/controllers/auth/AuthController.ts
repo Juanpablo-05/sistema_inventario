@@ -37,13 +37,18 @@ export async function login(req: Request, res: Response): Promise<void> {
         const user = rows[0];
         
         if (!user) {
-            res.status(401).json({ error: "Credenciales inválidas" });
+            res.status(401).json({ error: "Las credenciales digitadas no coinciden con ninguna cuenta registrada" });
             return;
         }
         const isPasswordValid = await bcrypt.compare(passwordInput, user.password_hash);
 
         if (!isPasswordValid) {
-            res.status(401).json({ error: "contraseña invalida" });
+            res.status(401).json({ error: "La contraseña ingresada no coincide con la registrada" });
+            return;
+        }
+
+        if (user.username !== username) {
+            res.status(401).json({ error: "El nombre de usuario no coincide con ninguna cuenta registrada" });
             return;
         }
 

@@ -64,8 +64,8 @@ type ConfirmDangerActionInput = {
         title,
         text,
         icon: "success",
-        timer: 1500,
-        showConfirmButton: false,
+        timer: 1700,
+        showConfirmButton: false
     });
     }
 
