@@ -1,4 +1,4 @@
-function formatDate(value?: string | null) {
+export function formatDate(value?: string | null) {
     if (!value) return "-";
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return "-";
@@ -9,4 +9,13 @@ function formatDate(value?: string | null) {
     }).format(date);
 }
 
-export default formatDate;
+export function toDateInputValue(value?: string | null): string {
+    if (!value) return "";
+    const trimmed = value.trim();
+    const dateOnly = trimmed.split("T")[0]?.split(" ")[0] ?? "";
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateOnly)) return dateOnly;
+    const parsed = new Date(trimmed);
+    if (Number.isNaN(parsed.getTime())) return "";
+    return parsed.toISOString().slice(0, 10);
+}
+

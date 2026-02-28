@@ -1,0 +1,19 @@
+.swal2-container.swal2-backdrop-show {
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(2px);
+}
+
+.app-alert-popup {
+    border-radius: 14px;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28);
+}
+
+.app-alert-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+.app-alert-text {
+    line-height: 1.45;
+}

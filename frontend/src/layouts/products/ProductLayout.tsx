@@ -4,7 +4,7 @@ import ModalCreateProducts from "../../components/modals/products/ModalCreatePro
 import ModalEditProducts from "../../components/modals/products/ModalEditProducts";
 import ModalDeleteProducts from "../../components/modals/products/ModalDeleteProducts";
 
-import formatDate from "../../utils/normalize"
+import {formatDate} from "../../utils/normalize"
 
 import '../../css/products/products_layout.css'
 

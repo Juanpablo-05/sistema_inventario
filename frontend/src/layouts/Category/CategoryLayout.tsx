@@ -5,7 +5,7 @@ import ModalDelete from "../../components/modals/category/ModalDelete";
 import ModalCreate from "../../components/modals/category/ModalCreate";
 import ModalEdit from "../../components/modals/category/ModalEdit";
 
-import formatDate from "../../utils/normalize";
+import {formatDate} from "../../utils/normalize";
 
 import '../../css/category/category_layout.css'
 

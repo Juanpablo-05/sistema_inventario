@@ -1,7 +1,11 @@
 import { useState } from "react";
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
+import Button from "react-bootstrap/Button";
 import { IoTrash } from "react-icons/io5";
+import {
+    confirmDangerAction,
+    showErrorAlert,
+    showSuccessAlert,
+} from "../../../utils/alerts";
 
 type ModalDeleteProps = {
     id: number;
@@ -9,18 +13,24 @@ type ModalDeleteProps = {
 };
 
 function ModalDelete({ id, onDelete }: ModalDeleteProps) {
-
-    const [show, setShow] = useState(false);
     const [deleting, setDeleting] = useState(false);
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    async function handleDeleteConfirm() {
+        if (deleting) return;
 
-    async function handleDelete() {
+        const confirmed = await confirmDangerAction({
+            title: "Eliminar categoría",
+            text: "Esta acción no se puede deshacer.",
+        });
+
+        if (!confirmed) return;
+
         setDeleting(true);
         try {
             await onDelete(id);
-            handleClose();
+            await showSuccessAlert("Categoría eliminada", "El registro se eliminó correctamente.");
+        } catch (error) {
+            await showErrorAlert(error, "No se pudo eliminar");
         } finally {
             setDeleting(false);
         }
@@ -28,26 +38,11 @@ function ModalDelete({ id, onDelete }: ModalDeleteProps) {
 
     return (
         <>
-            <Button variant="danger" onClick={handleShow}>
+            <Button variant="danger" onClick={handleDeleteConfirm} disabled={deleting}>
                 <IoTrash color="white" size={20}/>
             </Button>
-
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Eliminar categoría</Modal.Title>   
-                </Modal.Header>
-                <Modal.Body>¿Estás seguro de que deseas eliminar esta categoría?</Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Cancelar
-                    </Button>
-                    <Button variant="danger" onClick={handleDelete} disabled={deleting}>
-                        {deleting ? "Eliminando..." : "Eliminar"}
-                    </Button>
-                </Modal.Footer>
-            </Modal>
         </>
-    )
+    )   
 }
 
 export default ModalDelete

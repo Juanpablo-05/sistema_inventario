@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { IoCreateOutline } from "react-icons/io5";
+import { showErrorAlert, showSuccessAlert } from "../../../utils/alerts";
 
 type Categoria = {
   id: number;
@@ -45,6 +46,9 @@ function ModalEdit({ categoria, onEdit }: ModalEditProps) {
         estado,
       });
       handleClose();
+      await showSuccessAlert("Categoría actualizada", "Los cambios se guardaron correctamente.");
+    } catch (error) {
+      await showErrorAlert(error, "No se pudo actualizar");
     } finally {
       setSaving(false);
     }

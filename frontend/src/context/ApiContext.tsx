@@ -151,12 +151,12 @@ export function ApiProvider({ baseUrl, children }: ApiProviderProps) {
     const value = useMemo<ApiContextValue>(
         () => ({
             baseUrl: resolvedBase,
-            request,
             theme,
             isDark,
             token,
             user,
             isAuthenticated,
+            request,
             login,
             logout,
             setTheme,

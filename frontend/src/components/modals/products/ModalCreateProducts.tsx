@@ -1,7 +1,10 @@
 import { useMemo, useState } from "react";
+
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+
 import { useCategorias } from "../../../hooks/useCategorias";
+import { showErrorAlert, showSuccessAlert } from "../../../utils/alerts";
 import "../../../css/modals/modals.css";
 
 type ModalCreateProductsProps = {
@@ -66,6 +69,9 @@ function ModalCreateProducts({ onCreate }: ModalCreateProductsProps) {
             setStockActual("");
             setCategoriaId("");
             handleClose();
+            await showSuccessAlert("Producto creado", "Se creó correctamente el producto.");
+        } catch (error) {
+            await showErrorAlert(error, "Error al crear el producto");
         } finally {
             setSaving(false);
         }

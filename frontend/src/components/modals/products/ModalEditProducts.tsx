@@ -5,6 +5,8 @@ import Button from "react-bootstrap/Button";
 import { IoCreateOutline } from "react-icons/io5";
 
 import { useCategorias } from "../../../hooks/useCategorias";
+import { toDateInputValue } from "../../../utils/normalize";
+import { showErrorAlert, showSuccessAlert } from "../../../utils/alerts";
 
 type Producto = {
     id_p: number;
@@ -22,15 +24,6 @@ type ModalEditProductsProps = {
     onEdit: (id: number, input: { nombre_p?: string; precio_p?: number; fecha_agregado_p?: string; fecha_caducidad_p?: string; stock_actual?: number; Id_categoria_PK?: number; }) => Promise<void>;
 }
 
-function toDateInputValue(value?: string | null): string {
-    if (!value) return "";
-    const trimmed = value.trim();
-    const dateOnly = trimmed.split("T")[0]?.split(" ")[0] ?? "";
-    if (/^\d{4}-\d{2}-\d{2}$/.test(dateOnly)) return dateOnly;
-    const parsed = new Date(trimmed);
-    if (Number.isNaN(parsed.getTime())) return "";
-    return parsed.toISOString().slice(0, 10);
-}
 
 function ModalEditProducts( { producto, onEdit }: ModalEditProductsProps) {
 
@@ -47,6 +40,7 @@ function ModalEditProducts( { producto, onEdit }: ModalEditProductsProps) {
     const formId = `edit-product-form-${producto.id_p}`;
 
     const activeCategorias = useMemo(() => categorias.filter((c) => c.estado === "activo"), [categorias]);
+    
     useEffect(() => {
         if (!show) return;
         setNombre_p(producto.nombre_p);
@@ -90,7 +84,13 @@ function ModalEditProducts( { producto, onEdit }: ModalEditProductsProps) {
                 Id_categoria_PK: categoryNumber,
             });
             handleClose();
-        } finally {
+            await showSuccessAlert("Producto actualizado", "Los cambios se guardaron correctamente.");
+        }
+        
+        catch (error) {
+            await showErrorAlert(error, "Error al actualizar el producto");
+        }
+        finally {
             setSaving(false);
         }
     }    
