@@ -57,13 +57,17 @@ export async function sendResetPasswordOtp(req: Request, res: Response): Promise
 
         const user = users[0];
 
-        // Respuesta neutra para evitar enumerar usuarios.
         const genericResponse = {
             message: "Si existe una cuenta con ese correo, enviaremos un codigo OTP.",
         };
 
         if (!user) {
             res.status(200).json(genericResponse);
+            return;
+        }
+
+        if (!user.email) {
+            res.status(400).json({ error: "El usuario no tiene un email asociado" });
             return;
         }
 
@@ -77,7 +81,6 @@ export async function sendResetPasswordOtp(req: Request, res: Response): Promise
         const codeHash = hashResetOtp(code);
         const expiresAt = new Date(Date.now() + RESET_OTP_TTL_MINUTES * 60 * 1000);
 
-        // Se invalida cualquier OTP previo aun no usado para este usuario.
         await db
             .promise()
             .query("UPDATE password_resets SET used_at = NOW() WHERE user_id = ? AND used_at IS NULL", [user.id]);
@@ -90,13 +93,14 @@ export async function sendResetPasswordOtp(req: Request, res: Response): Promise
         const displayName = user.nombre ?? user.username ?? normalizedEmail;
         await resendClient.emails.send({
             from: RESEND_FROM,
-            to: [normalizedEmail],
+            to: [user.email],
             subject: "Codigo OTP para restablecer tu contraseña",
             html: buildOtpEmailHtml(displayName, code),
         });
 
         res.status(200).json(genericResponse);
     } catch (error) {
+        console.log(email)
         res.status(500).json({
             error: "No se pudo generar el OTP",
             details: error instanceof Error ? error.message : String(error),

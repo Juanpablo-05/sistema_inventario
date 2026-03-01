@@ -110,7 +110,10 @@ export async function resetPassword(req: Request, res: Response): Promise<void> 
                 nextAttempts,
                 activeReset.id,
             ]);
-            res.status(400).json({ error: "El OTP no es valido o expiro" });
+
+            console.log(otpHash)
+
+            res.status(400).json({ error: "El OTP no es valido o expiro", attemptsLeft: Math.max(0, RESET_OTP_MAX_ATTEMPTS - nextAttempts)  });
             return;
         }
 
