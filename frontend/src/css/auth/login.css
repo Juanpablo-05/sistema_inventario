@@ -1,36 +1,15 @@
 .login-page {
-  position: relative;
-  width: 100%;
-  min-height: 100vh;
+  position: fixed;
+  inset: 0;
+  width: 100dvw;
+  min-height: 100dvh;
+  scroll-behavior: smooth;
   display: grid;
   place-items: center;
   padding: 24px;
   background: radial-gradient(circle at top, #6ac1d0 0%, var(--color-bg) 45%);
   transition: all .3s ease;
-  
-  .login-theme-toggle {
-    position: absolute;
-    top: 18px;
-    right: 18px;
-    width: 40px;
-    height: 40px;
-    border: 1px solid color-mix(in srgb, var(--color-text) 35%, transparent);
-    border-radius: 999px;
-    background: var(--color-surface);
-    color: var(--color-text);
-    display: grid;
-    place-items: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
 
-    &:hover {
-      transform: translateY(-1px);
-      background-color: color-mix(in srgb, var(--color-surface) 90%, #ffffff);
-      transition: all .3s ease;
-    }
-  }
-
-  
   .login-card {
     width: 100%;
     max-width: 380px;
@@ -58,6 +37,12 @@
       padding: 10px 12px;
       background: color-mix(in srgb, var(--color-surface) 90%, #ffffff);
       color: var(--color-text);
+
+      &:focus{
+        outline: none;
+        border-color: color-mix(in srgb, var(--color-btn-primary) 70%, #0ea5e9);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-btn-primary) 20%, transparent);
+      }
     }
 
   } 
@@ -67,7 +52,11 @@
     border: none;
     border-radius: 8px;
     padding: 10px 14px;
-    background: var(--color-btn-primary);
+    background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-btn-primary) 90%, #34d399),
+    color-mix(in srgb, var(--color-primary) 76%, #14b8a6)
+  );
     color: #111;
     font-weight: 600;
     display: flex;
@@ -79,6 +68,11 @@
     &:disabled {
       opacity: 0.7;
       cursor: wait;
+    }
+
+    &:hover:not(:disabled) {
+      transform: translateY(-1px);
+      transition: all 0.2s ease;
     }
 
   }
@@ -111,14 +105,9 @@
 
 }
 
-
-
-
-
 .login-error {
   margin: 0;
   color: #b42318;
   font-size: 14px;
 }
-
 

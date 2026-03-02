@@ -1,14 +1,18 @@
-# Ignora archivos del sistema Mac 
-.DS_store
+# Sistema
+.DS_Store
 
-# Ignora la carpeta node_modules
+# Dependencias
 node_modules
 
-# Ignora todos los archivos de texto
-*.txt
-
-# Ignora los archivos relacionados a API keys
-.env
-
-# Ignora archivos de configuración SASS
+# Build / cache
+dist
 .sass-cache
+
+# Archivos temporales
+*.txt
+*.log
+
+# Variables de entorno / secretos
+.env
+.env.*
+!.env.example

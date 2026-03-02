@@ -17,6 +17,15 @@ type UserEmailRow = RowDataPacket & {
     nombre: string | null;
 };
 
+type ResendSendResponse = {
+    data: { id: string } | null;
+    error: {
+        statusCode?: number;
+        name?: string;
+        message?: string;
+    } | null;
+};
+
 const RESEND_API_KEY = process.env.RESEND_API_KEY ?? "";
 const RESEND_FROM = process.env.RESEND_FROM ?? "Acme <onboarding@resend.dev>";
 
@@ -91,16 +100,28 @@ export async function sendResetPasswordOtp(req: Request, res: Response): Promise
         );
 
         const displayName = user.nombre ?? user.username ?? normalizedEmail;
-        await resendClient.emails.send({
+        const sendResult = (await resendClient.emails.send({
             from: RESEND_FROM,
-            to: [user.email],
+            to: [normalizeEmail(user.email)],
             subject: "Codigo OTP para restablecer tu contraseña",
             html: buildOtpEmailHtml(displayName, code),
-        });
+        })) as ResendSendResponse;
+
+        if (sendResult.error) {
+            const resendMessage = sendResult.error.message ?? "Error al enviar el correo OTP";
+            const isTestingRestriction = resendMessage.includes("You can only send testing emails");
+
+            res.status(502).json({
+                error: "No se pudo enviar el OTP por correo",
+                details: isTestingRestriction
+                    ? "Tu cuenta Resend está en modo testing. Verifica un dominio y usa un remitente de ese dominio."
+                    : resendMessage,
+            });
+            return;
+        }
 
         res.status(200).json(genericResponse);
     } catch (error) {
-        console.log(email)
         res.status(500).json({
             error: "No se pudo generar el OTP",
             details: error instanceof Error ? error.message : String(error),

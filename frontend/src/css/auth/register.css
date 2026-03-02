@@ -1,0 +1,134 @@
+.register-page {
+  position: fixed;
+  inset: 0;
+  width: 100dvw;
+  min-height: 100dvh;
+  overflow: hidden;
+  scroll-behavior: smooth;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(
+      circle at 15% 15%,
+      color-mix(in srgb, var(--color-btn-primary) 38%, transparent),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 85% 20%,
+      color-mix(in srgb, var(--color-primary) 30%, transparent),
+      transparent 36%
+    ),
+    radial-gradient(
+      circle at bottom,
+      color-mix(in srgb, var(--color-secondary) 16%, transparent),
+      var(--color-bg) 54%
+    );
+
+  .register-card {
+    width: 100%;
+    max-width: 460px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 28px;
+    border-radius: 16px;
+    background: var(--color-surface);
+    border: 1px solid color-mix(in srgb, var(--color-text) 14%, transparent);
+    box-shadow: 0 20px 44px rgba(0, 0, 0, 0.2);
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 26px;
+      letter-spacing: 0.4px;
+      color: var(--color-text);
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    input {
+      border: 1px solid color-mix(in srgb, var(--color-text) 22%, transparent);
+      border-radius: 10px;
+      padding: 11px 12px;
+      background: color-mix(in srgb, var(--color-surface) 92%, #ffffff);
+      color: var(--color-text);
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+      &::placeholder {
+        color: color-mix(in srgb, var(--color-text) 55%, transparent);
+      }
+
+      &:focus {
+        outline: none;
+        border-color: color-mix(in srgb, var(--color-btn-primary) 70%, #0ea5e9);
+        box-shadow: 0 0 0 3px
+          color-mix(in srgb, var(--color-btn-primary) 20%, transparent);
+      }
+    }
+
+    .register-submit-btn {
+      margin-top: 8px;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 14px;
+      background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--color-btn-primary) 90%, #34d399),
+        color-mix(in srgb, var(--color-primary) 76%, #14b8a6)
+      );
+      color: #0b1220;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition:
+        transform 0.2s ease,
+        opacity 0.2s ease;
+
+      &:hover {
+        transform: translateY(-1px);
+
+        &:disabled {
+          opacity: 0.75;
+          cursor: wait;
+        }
+      }
+    }
+
+    .register-footer-text {
+      margin: 8px 0 0;
+      text-align: center;
+      font-size: 14px;
+      color: color-mix(in srgb, var(--color-text) 78%, transparent);
+
+      a {
+        color: color-mix(in srgb, var(--color-btn-primary) 92%, #22d3ee);
+        text-decoration: none;
+        font-weight: 700;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 560px) {
+  .register-page {
+    padding: 14px;
+  }
+
+  .register-card {
+    padding: 20px;
+    border-radius: 12px;
+  }
+}

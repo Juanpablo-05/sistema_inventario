@@ -3,28 +3,89 @@ import ProductLayout from "./layouts/products/ProductLayout";
 import MovementLayout from "./layouts/movements/MovementLayout";
 import LoginLayout from "./layouts/auth/LoginLayout";
 import HomePage from "./layouts/HomePage";
+import RegisterLayout from "./layouts/auth/RegisterLayout";
+import PageTransition from "./components/PageTransition";
+import ResetPassword from "./layouts/auth/ResetPassword";
 
-import {  Navigate, Route, Routes } from "react-router-dom";
+import { AnimatePresence } from "motion/react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import PrivateRoute from "./routes/PrivateRoute";
 import { AppShell } from "./components/SideBar";
 
-import './css/side_bar.css'
+import "./css/side_bar/side_bar.css";
 
 function App() {
-  return (
-    <Routes>
-      <Route path="/login" element={<LoginLayout />} />
+  const location = useLocation();
 
-      <Route element={<PrivateRoute />}>
-        <Route element={<AppShell />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/categories" element={<CategoryLayout />} />
-          <Route path="/products" element={<ProductLayout />} />
-          <Route path="/movements" element={<MovementLayout />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <Routes location={location} key={location.pathname}>
+        <Route
+          path="/login"
+          element={
+            <PageTransition>
+              <LoginLayout />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PageTransition>
+              <RegisterLayout />
+            </PageTransition>
+          }
+        />
+
+        <Route
+          path="/reset-password"
+          element={
+            <PageTransition>
+              <ResetPassword />
+            </PageTransition>
+          }
+        />  
+
+
+        <Route element={<PrivateRoute />}>
+          <Route element={<AppShell />}>
+            <Route
+              path="/"
+              element={
+                <PageTransition>
+                  <HomePage />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/categories"
+              element={
+                <PageTransition>
+                  <CategoryLayout />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/products"
+              element={
+                <PageTransition>
+                  <ProductLayout />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/movements"
+              element={
+                <PageTransition>
+                  <MovementLayout />
+                </PageTransition>
+              }
+            />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
         </Route>
-      </Route>
-    </Routes>
+      </Routes>
+    </AnimatePresence>
   );
 }
 

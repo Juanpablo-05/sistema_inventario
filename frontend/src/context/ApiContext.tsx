@@ -8,6 +8,25 @@ import {
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
+type ApiErrorData = {
+    error?: string;
+    details?: string;
+    attemptsLeft?: number;
+    [key: string]: unknown;
+};
+
+export class ApiError extends Error {
+    status: number;
+    data: ApiErrorData | string | null;
+
+    constructor(status: number, message: string, data: ApiErrorData | string | null) {
+        super(message);
+        this.name = "ApiError";
+        this.status = status;
+        this.data = data;
+    }
+}
+
 type ThemeMode = "light" | "dark";
 
 type AuthUser = {
@@ -20,6 +39,23 @@ type LoginInput = {
     username: string;
     password_hash: string;
 };
+
+type RegisterInput = {
+    nombre: string;
+    username: string;
+    email: string;
+    password_hash: string;
+}
+
+type ResendOtp = {
+    email: string;
+}
+
+type ResetPasswordInput = {
+    email: string;
+    otp: string;
+    newPassword: string;
+}
 
 type RequestOptions = RequestInit & {
     skipAuthRedirect?: boolean;
@@ -34,6 +70,9 @@ type ApiContextValue = {
     user: AuthUser | null;
     isAuthenticated: boolean;
     login: (input: LoginInput) => Promise<void>;
+    register: (input: RegisterInput) => Promise<void>;
+    resendOtp: (input: ResendOtp) => Promise<void>;
+    resetPassword: (input: ResetPasswordInput) => Promise<void>;
     logout: () => void;
     setTheme: React.Dispatch<React.SetStateAction<ThemeMode>>;
     toggleTheme: () => void;
@@ -100,6 +139,12 @@ export function ApiProvider({ baseUrl, children }: ApiProviderProps) {
                 headers,
             });
 
+            const contentType = res.headers.get("content-type") ?? "";
+            const isJson = contentType.includes("application/json");
+            const payload = isJson
+                ? await res.json().catch(() => null)
+                : await res.text().catch(() => "");
+
             if (!res.ok) {
                 if (res.status === 401 && !skipAuthRedirect) {
                     clearAuth();
@@ -107,11 +152,25 @@ export function ApiProvider({ baseUrl, children }: ApiProviderProps) {
                         navigate("/login", { replace: true });
                     }
                 }
-                const text = await res.text().catch(() => "");
-                throw new Error(`API ${res.status}: ${text || res.statusText}`);
+
+                const apiMessage =
+                    typeof payload === "object" &&
+                    payload !== null &&
+                    "error" in payload &&
+                    typeof payload.error === "string"
+                        ? payload.error
+                        : typeof payload === "string" && payload.trim()
+                          ? payload
+                          : res.statusText;
+
+                throw new ApiError(res.status, `API ${res.status}: ${apiMessage}`, payload as ApiErrorData | string | null);
             }
 
-            return (await res.json()) as T;
+            if (res.status === 204) {
+                return undefined as T;
+            }
+
+            return (payload as T) ?? (undefined as T);
         },
         [clearAuth, location.pathname, navigate, resolvedBase, token],
     );
@@ -143,6 +202,51 @@ export function ApiProvider({ baseUrl, children }: ApiProviderProps) {
         [request],
     );
 
+    const register = useCallback(
+        async (input: RegisterInput): Promise<void> => {
+            const data = await request<{
+                token: string;
+                tokenType: string;
+                user?: AuthUser;
+            }>("/auth/register", {
+                method: "POST",
+                body: JSON.stringify(input),
+                skipAuthRedirect: true,
+            });
+
+            console.log(data)
+        },
+        [request],
+    );
+
+    const resendOtp = useCallback(
+        async (input: ResendOtp): Promise<void> => { 
+            const data = await request<{
+                email: string;
+            }>("/auth/otp", {
+                method: "POST",
+                body: JSON.stringify(input),
+                skipAuthRedirect: true,
+            });
+            console.log(data)
+        }, [request]
+    );
+
+    const resetPassword = useCallback(
+        async (input: ResetPasswordInput): Promise<void> => { 
+            const data = await request<{
+                email: string;
+                otp: string;
+                newPassword: string;
+            }>("/auth/reset-password", {
+                method: "POST",
+                body: JSON.stringify(input),
+                skipAuthRedirect: true,
+            });
+            console.log(data)
+        }, [request]
+    )
+
     useEffect(() => {
         document.documentElement.setAttribute("data-theme", theme);
         localStorage.setItem("app-theme", theme);
@@ -158,11 +262,14 @@ export function ApiProvider({ baseUrl, children }: ApiProviderProps) {
             isAuthenticated,
             request,
             login,
+            register,
+            resendOtp,
+            resetPassword,
             logout,
             setTheme,
             toggleTheme,
         }),
-        [isAuthenticated, isDark, login, logout, request, resolvedBase, theme, toggleTheme, token, user],
+        [isAuthenticated, isDark, login, logout, register, resendOtp, resetPassword, request, resolvedBase, theme, toggleTheme, token, user],
     );
 
     return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>;
