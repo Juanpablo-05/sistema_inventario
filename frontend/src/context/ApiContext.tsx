@@ -6,14 +6,10 @@ import {
     useMemo,
     useState,
 } from "react";
+
+import type { ApiContextValue, AuthUser, LoginInput, RegisterInput, RequestOptions, ResendOtp, ResetPasswordInput, ThemeMode, ApiErrorData } from "./types/ContextApiTypes";
 import { useLocation, useNavigate } from "react-router-dom";
 
-type ApiErrorData = {
-    error?: string;
-    details?: string;
-    attemptsLeft?: number;
-    [key: string]: unknown;
-};
 
 export class ApiError extends Error {
     status: number;
@@ -27,56 +23,6 @@ export class ApiError extends Error {
     }
 }
 
-type ThemeMode = "light" | "dark";
-
-type AuthUser = {
-    id: number;
-    username: string;
-    role: string;
-};
-
-type LoginInput = {
-    username: string;
-    password_hash: string;
-};
-
-type RegisterInput = {
-    nombre: string;
-    username: string;
-    email: string;
-    password_hash: string;
-}
-
-type ResendOtp = {
-    email: string;
-}
-
-type ResetPasswordInput = {
-    email: string;
-    otp: string;
-    newPassword: string;
-}
-
-type RequestOptions = RequestInit & {
-    skipAuthRedirect?: boolean;
-};
-
-type ApiContextValue = {
-    baseUrl: string;
-    request<T>(path: string, init?: RequestOptions): Promise<T>;
-    theme: ThemeMode;
-    isDark: boolean;
-    token: string | null;
-    user: AuthUser | null;
-    isAuthenticated: boolean;
-    login: (input: LoginInput) => Promise<void>;
-    register: (input: RegisterInput) => Promise<void>;
-    resendOtp: (input: ResendOtp) => Promise<void>;
-    resetPassword: (input: ResetPasswordInput) => Promise<void>;
-    logout: () => void;
-    setTheme: React.Dispatch<React.SetStateAction<ThemeMode>>;
-    toggleTheme: () => void;
-};
 
 const ApiContext = createContext<ApiContextValue | null>(null);
 
@@ -96,7 +42,9 @@ export function ApiProvider({ baseUrl, children }: ApiProviderProps) {
         }
         return "light";
     });
+
     const [token, setToken] = useState<string | null>(() => localStorage.getItem("auth_token"));
+    
     const [user, setUser] = useState<AuthUser | null>(() => {
         const raw = localStorage.getItem("auth_user");
         if (!raw) return null;
