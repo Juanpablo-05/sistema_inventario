@@ -1,35 +1,36 @@
 .container_product-layout {
-    width: 100%;
-    height: 100vh;
-    padding: 10px;
+  width: 100%;
+  height: 100vh;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  min-height: 0;
+
+  .container_product-header {
+    width: 80%;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    gap: 16px;
-    min-height: 0;
+    justify-content: space-between;
+    margin: 25px 0 25px 0;
 
-    .container_product-header {
-        width: 80%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin: 25px 0 25px 0;
+    h2 {
+      color: var(--color-text);
+      font-size: 36px;
+      letter-spacing: 2px;
+      font-weight: 600;
+    }
 
-        h2 {
-        color: var(--color-text);
-        font-size: 36px;
-        letter-spacing: 2px;
-        font-weight: 600;
-        }
+    .container_product-header-btns {
+      width: 40%;
+      height: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
 
-        .container_product-header-btns{
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        }
-
-        .btn_reload {
+      .btn_reload {
         background: var(--color-btn-secondary);
         border: none;
         padding: 10px 20px;
@@ -39,59 +40,11 @@
         transition: all 0.3s ease;
 
         &:hover {
-            border-radius: 15px;
-            background: var(--color-btn-secondary-hover);
-            transition: all 0.3s ease;
+          border-radius: 15px;
+          background: var(--color-btn-secondary-hover);
+          transition: all 0.3s ease;
         }
-        }
+      }
     }
-
-    .table_products{
-            width: 90%;
-            flex: 1;
-            min-height: 0;
-            overflow-y: auto;
-            overflow-x: auto;
-            border-collapse: collapse;
-            text-align: left;
-            background: var(--color-surface);
-            border-radius: 8px;
-
-            table{
-                width: 100%;
-                border-collapse:separate;
-
-                thead {
-                background: var(--color-primary);
-                color: var(--color-text);
-                font-size: 18px;
-                letter-spacing: 1px;
-                text-align: center;
-                position: sticky;
-                top: 0;
-                z-index: 1;
-
-                tr {
-                    th {
-                        padding: 5px;
-                    }
-                }
-            }
-
-            tbody {
-                text-align: center;
-                tr {
-                    &:nth-child(even) {
-                        background: var(--color-table-row-even);
-                    }
-                }
-
-                td {
-                    padding: 10px;
-                    font-size: 16px;
-                    color: var(--color-text);
-                }
-            }
-        }
-    }
+  }
 }

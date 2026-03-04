@@ -1,82 +1,94 @@
-import { IoReload } from "react-icons/io5";
-
 import ModalDelete from "../../components/modals/category/ModalDelete";
 import ModalCreate from "../../components/modals/category/ModalCreate";
 import ModalEdit from "../../components/modals/category/ModalEdit";
+import DataTable, { type DataTableColumn } from "../../components/table/DataTable";
+import HeaderPages from "../../components/HeaderPages";
 
-import {formatDate} from "../../utils/normalize";
+import { formatDate } from "../../utils/normalize";
 import { useCategorias } from "../../hooks/useCategorias";
 import { useApi } from "../../context/ApiContext";
 
-import '../../css/category/category_layout.css'
+import "../../css/category/category_layout.css";
+import "../../css/table/shared_table.css";
 
 function CategoryLayout() {
-  const { categorias, loading, error, reload, createCategoria, deleteCategoria, updateCategoria } = useCategorias();
+  const { categorias, loading, error, reload, createCategoria, deleteCategoria, updateCategoria } =
+    useCategorias();
 
   const { user } = useApi();
+  const isAdmin = user?.role === "admin";
+
+  const columns: DataTableColumn<(typeof categorias)[number]>[] = [
+    {
+      key: "nombre",
+      header: "Nombre",
+      render: (categoria) => categoria.nombre,
+    },
+    {
+      key: "descripcion",
+      header: "Descripción",
+      render: (categoria) => categoria.descripcion || "-",
+    },
+    {
+      key: "estado",
+      header: "Estado",
+      render: (categoria) => categoria.estado,
+    },
+    {
+      key: "createdAt",
+      header: "Fecha de creación",
+      render: (categoria) => formatDate(categoria.createdAt),
+    },
+    {
+      key: "updatedAt",
+      header: "Fecha de edición",
+      render: (categoria) => formatDate(categoria.updatedAt),
+    },
+    ...(isAdmin
+      ? [
+          {
+            key: "acciones",
+            header: "Acciones",
+            render: (categoria: (typeof categorias)[number]) => (
+              <div
+                style={{
+                  display: "flex",
+                  gap: 8,
+                  justifyContent: "center",
+                }}
+              >
+                <ModalEdit categoria={categoria} onEdit={updateCategoria} />
+                <ModalDelete id={categoria.id} onDelete={deleteCategoria} />
+              </div>
+            ),
+          },
+        ]
+      : []),
+  ];
 
   return (
     <div className="container_category-layout">
-      <div className="container_category-header">
-        <h2>Categorías</h2>
-        <div className="container_category-header-btns">
-          <ModalCreate onCreate={createCategoria} />
-
-          <button onClick={reload} disabled={loading} className="btn_reload">
-            <IoReload size={20} className={loading ? "icon-spin" : ""} />
-          </button>
-        </div>
-      </div>
+      <HeaderPages
+        title="Categorías"
+        onReload={reload}
+        loading={loading}
+        createAction={<ModalCreate onCreate={createCategoria} />}
+        headerClassName="container_category-header"
+        actionsClassName="container_category-header-btns"
+      />
 
       {error ? <p style={{ color: "crimson" }}>{error}</p> : null}
 
       <div className="table_category">
-        <table>
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Descripción</th>
-              <th>Estado</th>
-              <th>Fecha de creación</th>
-              <th>Fecha de edición</th>
-              {user?.role === "admin" && <th>Acciones</th>}
-            </tr>
-          </thead>
-          <tbody>
-            {categorias.map((categoria) => (
-              <tr key={categoria.id}>
-                <td>{categoria.nombre}</td>
-                <td>{categoria.descripcion || "-"}</td>
-                <td>{categoria.estado}</td>
-                <td>{formatDate(categoria.createdAt)}</td>
-                <td>{formatDate(categoria.updatedAt)}</td>
-                {user?.role === "admin" && (
-                  <td>
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: 8,
-                        justifyContent: "center",
-                      }}
-                    >
-                      <ModalEdit
-                        categoria={categoria}
-                        onEdit={updateCategoria}
-                      />
-                      <ModalDelete
-                        id={categoria.id}
-                        onDelete={deleteCategoria}
-                      />
-                    </div>
-                  </td>
-                )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <DataTable
+          rows={categorias}
+          columns={columns}
+          rowKey={(categoria) => categoria.id}
+          emptyMessage="No hay categorías registradas."
+        />
       </div>
     </div>
   );
-};
+}
 
-export default CategoryLayout
+export default CategoryLayout;

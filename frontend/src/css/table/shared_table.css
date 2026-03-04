@@ -1,0 +1,54 @@
+.table_category,
+.table_products,
+.table_movements {
+  width: 90%;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: auto;
+  border-collapse: collapse;
+  text-align: left;
+  background: var(--color-surface);
+  border-radius: 8px;
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    background: var(--color-surface);
+    border-radius: 8px;
+    cursor: default;
+
+    .data-table-header {
+      background: var(--color-primary);
+      color: var(--color-text);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      text-align: center;
+
+      th {
+        padding: 12px;
+      }
+    }
+
+    .data-table-body {
+      text-align: center;
+
+      tr {
+        &:nth-child(even) {
+          background: var(--color-table-row-even);
+        }
+
+        &:hover {
+          background: var(--color-surface-hover);
+          transition: background 0.3s ease;
+        }
+      }
+
+      td {
+        padding: 12px;
+      }
+    }
+  }
+}

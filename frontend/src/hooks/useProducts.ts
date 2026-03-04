@@ -6,7 +6,7 @@ type ProductosApiItem = {
     nombre_p: string;
     precio_p: number;
     fecha_agregado_p: string;
-    fecha_caducidad_p: string;
+    fecha_caducidad_p: string | "";
     stock_actual: number;
     Id_categoria_PK?: number;
     created_at_p?: string | null;
@@ -22,7 +22,7 @@ type CreateProductInput = {
     nombre_p: string;
     precio_p: number;
     fecha_agregado_p: string;
-    fecha_caducidad_p: string;
+    fecha_caducidad_p?: string;
     stock_actual: number;
     Id_categoria_PK: number;
 }
@@ -119,18 +119,12 @@ export function useProductos() {
             await request(`/products/edit/${id}`, {
                 method: "PUT",
                 body: JSON.stringify({
-                    // Campos soportados por el backend actual
                     nombre: input.nombre_p,
                     precio: input.precio_p,
                     fecha_agregado: input.fecha_agregado_p,
                     fecha_caducidad: input.fecha_caducidad_p,
                     stock_actual: input.stock_actual,
                     Id_categoria_PK: input.Id_categoria_PK,
-                    // Campos alternos por compatibilidad
-                    // nombre_p: input.nombre_p,
-                    // precio_p: input.precio_p,
-                    // fecha_agregado_p: input.fecha_agregado_p,
-                    // fecha_caducidad_p: input.fecha_caducidad_p,
                 }),
             });
             await fetchProductos();
