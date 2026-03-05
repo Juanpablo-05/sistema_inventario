@@ -9,6 +9,7 @@ import { ProductsRoutes } from "./routes/ProductosRoutes";
 import { InventoriMovRoutes } from "./routes/InventoryMovRoutes";
 import { AuthRoutes } from "./routes/AuthRoutes";
 import { UsersRoutes } from "./routes/UsersRoutes";
+import { BillingRoutes } from "./routes/BillingRoutes";
 
 import { verifyToken } from "./middleware/Auth";
 
@@ -31,6 +32,7 @@ app.use("/users", verifyToken, UsersRoutes);
 app.use("/categories", verifyToken, CategoriesRoutes);
 app.use("/products", verifyToken, ProductsRoutes);
 app.use("/inventory-movements", verifyToken, InventoriMovRoutes);
+app.use("/billing", verifyToken, BillingRoutes);
 
 app.listen(PORT, () => {
     console.log(`API listening on http://localhost:${PORT}`);
