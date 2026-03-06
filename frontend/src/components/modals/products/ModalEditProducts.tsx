@@ -4,7 +4,7 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { IoCreateOutline } from "react-icons/io5";
 
-import { useCategorias } from "../../../hooks/useCategorias";
+import { useCategorias } from "../../../hooks/category/useCategorias";
 import { toDateInputValue } from "../../../utils/normalize";
 import { showErrorAlert, showSuccessAlert } from "../../../utils/alerts";
 

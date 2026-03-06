@@ -1,4 +1,4 @@
-import { useApi } from "../context/ApiContext";
+import { useApi } from "../../context/ApiContext";
 import { useCallback, useEffect, useState } from "react";
 
 type UserApiItem = {
@@ -10,6 +10,7 @@ type UserApiItem = {
     email: string | null;
     rol: "admin" | "empleado";
     numero_movimientos: number | null;
+    numero_facturas: number | null;
     created_at?: string | null;
     updated_at?: string | null;
 };
@@ -49,6 +50,7 @@ export function useUsers() {
                 email: userRow.email,
                 rol: userRow.rol,
                 numero_movimientos: userRow.numero_movimientos,
+                numero_facturas: userRow.numero_facturas,
             });
         } catch (error) {
             setError("Error fetching users");

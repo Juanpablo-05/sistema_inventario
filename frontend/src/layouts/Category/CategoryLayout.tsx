@@ -5,7 +5,7 @@ import DataTable, { type DataTableColumn } from "../../components/table/DataTabl
 import HeaderPages from "../../components/HeaderPages";
 
 import { formatDate } from "../../utils/normalize";
-import { useCategorias } from "../../hooks/useCategorias";
+import { useCategorias } from "../../hooks/category/useCategorias";
 import { useApi } from "../../context/ApiContext";
 
 import "../../css/category/category_layout.css";

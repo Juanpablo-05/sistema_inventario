@@ -18,6 +18,7 @@ type UserItem = {
     email: string | null;
     rol: "admin" | "empleado";
     numero_movimientos?: number | null;
+    numero_facturas?: number | null;
     created_at?: string | null;
     updated_at?: string | null;
 };
@@ -56,8 +57,8 @@ function HomePage() {
         const total = users.length;
         const admins = users.filter((u) => u.rol === "admin").length;
         const empleados = users.filter((u) => u.rol === "empleado").length;
-        const movimientos = users.reduce((acc, current) => acc + Number(current.numero_movimientos ?? 0), 0);
-        return { total, admins, empleados, movimientos };
+        const facturas = users.reduce((acc, current) => acc + Number(current.numero_facturas ?? 0), 0);
+        return { total, admins, empleados, facturas };
     }, [users]);
 
     const recentUsers = useMemo(
@@ -112,8 +113,8 @@ function HomePage() {
             <article className="home-stat-card">
                 <IoRefresh size={22} />
                 <div>
-                <h3>Movimientos registrados</h3>
-                <p>{stats.movimientos}</p>
+                <h3>Facturas emitidas</h3>
+                <p>{stats.facturas}</p>
                 </div>
             </article>
             </section>
@@ -128,7 +129,7 @@ function HomePage() {
                     <th>Usuario</th>
                     <th>Email</th>
                     <th>Rol</th>
-                    <th>Movimientos</th>
+                    <th>Facturas</th>
                     <th>Actualizado</th>
                     </tr>
                 </thead>
@@ -148,7 +149,7 @@ function HomePage() {
                             <td>{item.username}</td>
                             <td>{item.email}</td>
                             <td>{item.rol}</td>
-                            <td>{item.numero_movimientos ?? 0}</td>
+                            <td>{item.numero_facturas ?? 0}</td>
                             <td>
                             {formatDate(item.updated_at ?? item.created_at)}
                             </td>

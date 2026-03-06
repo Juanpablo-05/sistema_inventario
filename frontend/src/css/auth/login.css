@@ -8,7 +8,7 @@
   place-items: center;
   padding: 24px;
   background: radial-gradient(circle at top, #6ac1d0 0%, var(--color-bg) 45%);
-  transition: all .3s ease;
+  transition: all 0.3s ease;
 
   .login-card {
     width: 100%;
@@ -38,14 +38,13 @@
       background: color-mix(in srgb, var(--color-surface) 90%, #ffffff);
       color: var(--color-text);
 
-      &:focus{
+      &:focus {
         outline: none;
         border-color: color-mix(in srgb, var(--color-btn-primary) 70%, #0ea5e9);
         box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-btn-primary) 20%, transparent);
       }
     }
-
-  } 
+  }
 
   .login-submit-btn {
     margin-top: 8px;
@@ -53,10 +52,10 @@
     border-radius: 8px;
     padding: 10px 14px;
     background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--color-btn-primary) 90%, #34d399),
-    color-mix(in srgb, var(--color-primary) 76%, #14b8a6)
-  );
+      135deg,
+      color-mix(in srgb, var(--color-btn-primary) 90%, #34d399),
+      color-mix(in srgb, var(--color-primary) 76%, #14b8a6)
+    );
     color: #111;
     font-weight: 600;
     display: flex;
@@ -64,7 +63,7 @@
     justify-content: center;
     gap: 8px;
     cursor: pointer;
-    
+
     &:disabled {
       opacity: 0.7;
       cursor: wait;
@@ -74,40 +73,37 @@
       transform: translateY(-1px);
       transition: all 0.2s ease;
     }
-
   }
 
-  .showPassword{
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  gap: 8px;
-
-  .show-password-btn{
-    background: transparent;
-    border: none;
-    color: var(--color-text);
+  .showPassword {
+    width: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
-    cursor: pointer;
+    justify-content: space-around;
+    gap: 8px;
+
+    .show-password-btn {
+      background: transparent;
+      border: none;
+      color: var(--color-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.85;
+      }
+    }
+
+    input {
+      flex: 2;
+    }
   }
 
-  .show-password-btn:hover{
-    opacity: 0.85;
+  .login-error {
+    margin: 0;
+    color: #b42318;
+    font-size: 14px;
   }
-
-  input{
-    flex: 2;
-  }
-} 
-
 }
-
-.login-error {
-  margin: 0;
-  color: #b42318;
-  font-size: 14px;
-}
-

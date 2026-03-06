@@ -1,13 +1,14 @@
 type CamposBillingCreate = {
     numero_factura: string;
     usuario_id: number;
-    cliente_nombre: string;
-    cliente_documento: string;
+    cliente_nombre?: string;
+    cliente_documento?: string;
     observaciones?: string;
     subtotal: number;
-    impuestos: number;
+    impuesto: number;
     total: number;
     estado: 'emitida' | 'anulada';
+    fecha_emision?: string;
 }
 
 type CamposBillingEdite = {
@@ -17,10 +18,10 @@ type CamposBillingEdite = {
     cliente_documento?: string;
     observaciones?: string;
     subtotal?: number;
-    impuestos?: number;
+    impuesto?: number;
     total?: number;
     estado?: 'emitida' | 'anulada';
-    fecha_emision?: Date;
+    fecha_emision?: string;
 }
 
 export type { CamposBillingCreate, CamposBillingEdite };

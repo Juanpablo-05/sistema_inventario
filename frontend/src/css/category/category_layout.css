@@ -23,29 +23,5 @@
       letter-spacing: 2px;
       font-weight: 600;
     }
-
-    .container_category-header-btns {
-      width: 40%;
-      height: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: space-evenly;
-
-      .btn_reload {
-        background: var(--color-btn-secondary);
-        border: none;
-        padding: 10px 20px;
-        cursor: pointer;
-        font-size: 16px;
-        color: var(--color-text);
-        transition: all 0.3s ease;
-
-        &:hover {
-          border-radius: 15px;
-          background: var(--color-btn-secondary-hover);
-          transition: all 0.3s ease;
-        }
-      }
-    }
   }
 }

@@ -1,38 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import { useApi } from "../context/ApiContext";
+import { useApi } from "../../context/ApiContext";
 
-type MovementApiItem = {
-  id: number;
-  Id_Produ_PK: number;
-  tipo: "entrada" | "salida" | "ajuste";
-  cantidad: number;
-  fecha_movimiento: string;
-  motivo: string;
-  stock_anterior: number;
-  stock_nuevo: number;
-  created_at?: string | null;
-  updated_at?: string | null;
-};
-
-type MovementsResponse = {
-  inventory_movements: MovementApiItem[];
-};
-
-type CreateMovementInput = {
-  Id_producto_PK: number;
-  tipo: "entrada" | "salida" | "ajuste";
-  cantidad: number;
-  fecha_movimiento: string;
-  motivo: string;
-};
-
-type UpdateMovementInput = {
-  Id_producto_PK?: number;
-  tipo?: "entrada" | "salida" | "ajuste";
-  cantidad?: number;
-  fecha_movimiento?: string;
-  motivo?: string;
-};
+import type { MovementApiItem, MovementsResponse, CreateMovementInput, UpdateMovementInput } from "./types/TypesMovements";
 
 export function useMovements() {
   const { request } = useApi();
@@ -53,7 +22,9 @@ export function useMovements() {
 
     try {
       const data = await request<MovementsResponse>("/inventory-movements/");
-      const list = Array.isArray(data.inventory_movements) ? data.inventory_movements : [];
+      const list = Array.isArray(data.inventory_movements)
+        ? data.inventory_movements
+        : [];
 
       setMovements(
         list.map((item) => ({
@@ -65,12 +36,17 @@ export function useMovements() {
           motivo: item.motivo,
           stock_anterior: Number(item.stock_anterior),
           stock_nuevo: Number(item.stock_nuevo),
+          usuario_id: Number(item.usuario_id),
+          origen_tipo: item.origen_tipo,
+          origen_id: Number(item.origen_id),
           createdAt: item.created_at ?? null,
           updatedAt: item.updated_at ?? null,
         })),
       );
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error al cargar movimientos");
+      setError(
+        err instanceof Error ? err.message : "Error al cargar movimientos",
+      );
     } finally {
       setLoading(false);
     }

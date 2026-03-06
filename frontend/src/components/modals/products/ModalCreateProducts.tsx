@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 
-import { useCategorias } from "../../../hooks/useCategorias";
+import { useCategorias } from "../../../hooks/category/useCategorias";
 import { showErrorAlert, showSuccessAlert } from "../../../utils/alerts";
 import "../../../css/modals/modals.css";
 

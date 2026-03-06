@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import { IoReload } from "react-icons/io5";
 
+import '../css/home/header/header.css';
+
 type HeaderPagesProps = {
   title: string;
   onReload: () => void | Promise<void>;

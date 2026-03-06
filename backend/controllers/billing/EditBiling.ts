@@ -1,6 +1,6 @@
 import { db } from "../../db/db";
 import { Request, Response } from "express";
-import { CamposBillingEdite } from "./types/types";
+import { CamposBillingEdite } from "./types/Types";
 
 export const editBilling = async (req: Request, res: Response) => { 
     const { id } = req.params;
@@ -11,14 +11,14 @@ export const editBilling = async (req: Request, res: Response) => {
         cliente_documento,
         observaciones,
         subtotal,
-        impuestos,
+        impuesto,
         total,
         estado
     }: CamposBillingEdite = req.body;
 
     const billingId = Number(id);
 
-    if(numero_factura === undefined && usuario_id === undefined && cliente_nombre === undefined && cliente_documento === undefined && observaciones === undefined && subtotal === undefined && impuestos === undefined && total === undefined && estado === undefined){
+    if(numero_factura === undefined && usuario_id === undefined && cliente_nombre === undefined && cliente_documento === undefined && observaciones === undefined && subtotal === undefined && impuesto === undefined && total === undefined && estado === undefined){
         return res.status(400).json({ error: "No se proporcionaron campos para actualizar" });
     }
 
@@ -50,8 +50,8 @@ export const editBilling = async (req: Request, res: Response) => {
         return res.status(400).json({ error: "Subtotal inválido" });
     }
 
-    if (impuestos !== undefined && (Number.isNaN(Number(impuestos)) || Number(impuestos) < 0)) {
-        return res.status(400).json({ error: "Impuestos inválidos" });
+    if (impuesto !== undefined && (Number.isNaN(Number(impuesto)) || Number(impuesto) < 0)) {
+        return res.status(400).json({ error: "Impuesto inválido" });
     }
 
     if (total !== undefined && (Number.isNaN(Number(total)) || Number(total) < 0)) {
@@ -68,12 +68,13 @@ export const editBilling = async (req: Request, res: Response) => {
     
     try {
         
-       const [result] = await db.promise().query(
-        'UPDATE facturas SET numero_factura = COALESCE(?, numero_factura), usuario_id = COALESCE(?, usuario_id), cliente_nombre = COALESCE(?, cliente_nombre), cliente_documento = COALESCE(?, cliente_documento), observaciones = COALESCE(?, observaciones), subtotal = COALESCE(?, subtotal), impuestos = COALESCE(?, impuestos), total = COALESCE(?, total), estado = COALESCE(?, estado) WHERE id = ?',
-            [numero_factura, usuario_id, cliente_nombre, cliente_documento, observaciones, subtotal, impuestos, total, estado, id]
-        ); 
+       await db.promise().query(
+        'UPDATE facturas SET numero_factura = COALESCE(?, numero_factura), usuario_id = COALESCE(?, usuario_id), cliente_nombre = COALESCE(?, cliente_nombre), cliente_documento = COALESCE(?, cliente_documento), observaciones = COALESCE(?, observaciones), subtotal = COALESCE(?, subtotal), impuesto = COALESCE(?, impuesto), total = COALESCE(?, total), estado = COALESCE(?, estado) WHERE id = ?',
+            [numero_factura, usuario_id, cliente_nombre, cliente_documento, observaciones, subtotal, impuesto, total, estado, id]
+        );
+        return res.status(200).json({ message: "Factura actualizada correctamente" });
 
     }catch (error) {
-        res.status(500).json({ error: 'Error al editar la factura' });
+        return res.status(500).json({ error: 'Error al editar la factura' });
     }
 }

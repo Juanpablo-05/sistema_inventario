@@ -127,8 +127,8 @@ export async function editBillingDetails(req: Request, res: Response) {
             return res.status(400).json({ error: "No se pueden editar detalles en una factura anulada" });
         }
 
-        const [productoRows] = await conn.query("SELECT id FROM productos WHERE id = ? LIMIT 1", [newProductoId]);
-        const productoList = productoRows as Array<{ id: number }>;
+        const [productoRows] = await conn.query("SELECT id_p FROM productos WHERE id_p = ? LIMIT 1", [newProductoId]);
+        const productoList = productoRows as Array<{ id_p: number }>;
         if (productoList.length === 0) {
             await conn.rollback();
             return res.status(404).json({ error: "Producto no encontrado" });

@@ -1,7 +1,9 @@
-import DataTable, { type DataTableColumn } from "../../components/table/DataTable";
+import DataTable, {
+  type DataTableColumn,
+} from "../../components/table/DataTable";
 import HeaderPages from "../../components/HeaderPages";
 
-import { useMovements } from "../../hooks/useMovements";
+import { useMovements } from "../../hooks/movements/useMovements";
 import { formatDate } from "../../utils/normalize";
 
 import "../../css/movement_layout.css";
@@ -55,14 +57,24 @@ function MovementLayout() {
       },
     },
     {
+      key: "origen",
+      header: "Origen",
+      render: (movement) => movement.origen_tipo
+    },
+    {
+      key: "usuario_id",
+      header: "ID Usuario",
+      render: (movement) => movement.usuario_id,
+    },
+    {
+      key: "origen_id",
+      header: "ID Factura",
+      render: (movement) => movement.origen_id,
+    },
+    {
       key: "fecha_movimiento",
       header: "Fecha",
       render: (movement) => formatDate(movement.fecha_movimiento),
-    },
-    {
-      key: "motivo",
-      header: "Motivo",
-      render: (movement) => movement.motivo,
     },
   ];
 

@@ -43,6 +43,7 @@ type ApiContextValue = {
   request<T>(path: string, init?: RequestOptions): Promise<T>;
   theme: ThemeMode;
   isDark: boolean;
+  isSidebarOpen: boolean;
   token: string | null;
   user: AuthUser | null;
   isAuthenticated: boolean;
@@ -52,7 +53,9 @@ type ApiContextValue = {
   resetPassword: (input: ResetPasswordInput) => Promise<void>;
   logout: () => void;
   setTheme: React.Dispatch<React.SetStateAction<ThemeMode>>;
+  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   toggleTheme: () => void;
+  toggleSidebar: () => void;
 };
 
 

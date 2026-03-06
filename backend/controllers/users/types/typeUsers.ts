@@ -20,6 +20,7 @@ type UserResponse = {
     email: string;
     role: "admin" | "empleado";
     numero_movimientos: number;
+    numero_facturas: number;
     created_at: string;
     updated_at: string;
 }

@@ -7,6 +7,7 @@ import RegisterLayout from "./layouts/auth/RegisterLayout";
 import PageTransition from "./components/PageTransition";
 import ResetPassword from "./layouts/auth/ResetPassword";
 import HomeUser from "./layouts/home/HomeUser";
+import BillingLayout from "./layouts/billing/BillingLayout";
 
 import { AnimatePresence } from "motion/react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
@@ -83,6 +84,15 @@ function App() {
                 </PageTransition>
               }
             />
+            <Route
+              path="/billing"
+              element={
+                <PageTransition>
+                  <BillingLayout />
+                </PageTransition>
+              }
+            />
+
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Route>

@@ -10,14 +10,14 @@ import {
   IoLogOutOutline,
 } from "react-icons/io5";
 
-import { useState } from "react";
+import { FaFileInvoiceDollar as IoDollar } from 'react-icons/fa';
+
 import { useApi } from "../context/ApiContext";
 
 import { NavLink, Outlet } from "react-router-dom";
 
 export function AppShell() {
-  const [isActive, setIsActive] = useState(false);
-  const { isDark, toggleTheme, logout } = useApi();
+  const { isDark, isSidebarOpen, toggleSidebar, toggleTheme, logout, user } = useApi();
 
   const navClass =
     (baseClass: string) =>
@@ -28,16 +28,16 @@ export function AppShell() {
     <div className={`container_index ${isDark ? "theme-dark" : "theme-light"}`}>
       <div
         className={
-          isActive ? "container_side-bar active" : "container_side-bar"
+          isSidebarOpen ? "container_side-bar active" : "container_side-bar"
         }
       >
-        <button onClick={() => setIsActive(!isActive)} className="side_bar-btn">
-          {isActive ? <IoClose /> : <IoMenu />}
+        <button onClick={toggleSidebar} className="side_bar-btn">
+          {isSidebarOpen ? <IoClose /> : <IoMenu />}
         </button>
 
         <div className="side_bar-content">
           <div className="side_bar-home">
-            {isActive ? (
+            {isSidebarOpen ? (
               <NavLink to="/" end className={navClass("side_bar-home-btn")}>
                 inicio
               </NavLink>
@@ -49,7 +49,7 @@ export function AppShell() {
           </div>
 
           <div className="side_bar-category">
-            {isActive ? (
+            {isSidebarOpen ? (
               <NavLink
                 to="/categories"
                 className={navClass("side_bar-category-btn")}
@@ -63,7 +63,7 @@ export function AppShell() {
             )}
           </div>
           <div className="side_bar-products">
-            {isActive ? (
+            {isSidebarOpen ? (
               <NavLink
                 to="/products"
                 className={navClass("side_bar-products-btn")}
@@ -76,17 +76,36 @@ export function AppShell() {
               </NavLink>
             )}
           </div>
-          <div className="side_bar-movement">
-            {isActive ? (
+          {user?.role === "admin" && (
+            <div className="side_bar-movement">
+              {isSidebarOpen ? (
+                <NavLink
+                  to="/movements"
+                  className={navClass("side_bar-movement-btn")}
+                >
+                  movimientos
+                </NavLink>
+              ) : (
+                <NavLink
+                  to="/movements"
+                  className={navClass("btn_movement-io")}
+                >
+                  <IoBarChart size={20} />
+                </NavLink>
+              )}
+            </div>
+          )}
+          <div className="side_bar-billing">
+            {isSidebarOpen ? (
               <NavLink
-                to="/movements"
-                className={navClass("side_bar-movement-btn")}
+                to="/billing"
+                className={navClass("side_bar-billing-btn")}
               >
-                movimientos
+                Facturacion
               </NavLink>
             ) : (
-              <NavLink to="/movements" className={navClass("btn_movement-io")}>
-                <IoBarChart size={20} />
+              <NavLink to="/billing" className={navClass("btn_billing-io")}>
+                <IoDollar size={20} />
               </NavLink>
             )}
           </div>
@@ -95,7 +114,7 @@ export function AppShell() {
         <div className="container_btn-dark">
           <div
             className={
-              isActive ? "container_circle active" : "container_circle"
+              isSidebarOpen ? "container_circle active" : "container_circle"
             }
             onClick={toggleTheme}
           >

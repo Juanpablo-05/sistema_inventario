@@ -42,6 +42,13 @@ export function ApiProvider({ baseUrl, children }: ApiProviderProps) {
         }
         return "light";
     });
+    const [isSidebarOpen, setSidebarOpen] = useState<boolean>(() => {
+        try {
+            return localStorage.getItem("sidebar-open") === "1";
+        } catch {
+            return false;
+        }
+    });
 
     const [token, setToken] = useState<string | null>(() => localStorage.getItem("auth_token"));
     
@@ -127,6 +134,10 @@ export function ApiProvider({ baseUrl, children }: ApiProviderProps) {
         setTheme((prev) => (prev === "dark" ? "light" : "dark"));
     }, []);
 
+    const toggleSidebar = useCallback(() => {
+        setSidebarOpen((prev) => !prev);
+    }, []);
+
     const login = useCallback(
         async (input: LoginInput): Promise<void> => {
             const data = await request<{
@@ -200,11 +211,20 @@ export function ApiProvider({ baseUrl, children }: ApiProviderProps) {
         localStorage.setItem("app-theme", theme);
     }, [theme]);
 
+    useEffect(() => {
+        try {
+            localStorage.setItem("sidebar-open", isSidebarOpen ? "1" : "0");
+        } catch {
+            // no-op si localStorage no está disponible
+        }
+    }, [isSidebarOpen]);
+
     const value = useMemo<ApiContextValue>(
         () => ({
             baseUrl: resolvedBase,
             theme,
             isDark,
+            isSidebarOpen,
             token,
             user,
             isAuthenticated,
@@ -215,9 +235,27 @@ export function ApiProvider({ baseUrl, children }: ApiProviderProps) {
             resetPassword,
             logout,
             setTheme,
+            setSidebarOpen,
             toggleTheme,
+            toggleSidebar,
         }),
-        [isAuthenticated, isDark, login, logout, register, resendOtp, resetPassword, request, resolvedBase, theme, toggleTheme, token, user],
+        [
+            isAuthenticated,
+            isDark,
+            isSidebarOpen,
+            login,
+            logout,
+            register,
+            resendOtp,
+            resetPassword,
+            request,
+            resolvedBase,
+            theme,
+            toggleTheme,
+            toggleSidebar,
+            token,
+            user,
+        ],
     );
 
     return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>;

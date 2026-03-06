@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useApi } from "../context/ApiContext";
+import { useApi } from "../../context/ApiContext";
 
 type CategoriasApiItem = {
   id: number;

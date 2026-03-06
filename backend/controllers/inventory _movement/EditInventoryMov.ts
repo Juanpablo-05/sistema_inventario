@@ -92,7 +92,7 @@ export async function editInventoryMov(req: Request, res: Response) {
 
         if (newProductId === oldProductId) {
             const [prodRows] = await conn.query(
-                "SELECT stock_actual FROM productos WHERE id = ? FOR UPDATE",
+                "SELECT stock_actual FROM productos WHERE id_p = ? FOR UPDATE",
                 [oldProductId],
             );
             const prodList = prodRows as Array<{ stock_actual: number }>;
@@ -122,12 +122,12 @@ export async function editInventoryMov(req: Request, res: Response) {
             );
 
             await conn.query(
-                "UPDATE productos SET stock_actual = ?, updated_at = NOW() WHERE id = ?",
+                "UPDATE productos SET stock_actual = ?, updated_at_p = NOW() WHERE id_p = ?",
                 [stockNuevo, oldProductId],
             );
         } else {
             const [oldProdRows] = await conn.query(
-                "SELECT stock_actual FROM productos WHERE id = ? FOR UPDATE",
+                "SELECT stock_actual FROM productos WHERE id_p = ? FOR UPDATE",
                 [oldProductId],
             );
             const oldProdList = oldProdRows as Array<{ stock_actual: number }>;
@@ -137,7 +137,7 @@ export async function editInventoryMov(req: Request, res: Response) {
             }
 
             const [newProdRows] = await conn.query(
-                "SELECT stock_actual FROM productos WHERE id = ? FOR UPDATE",
+                "SELECT stock_actual FROM productos WHERE id_p = ? FOR UPDATE",
                 [newProductId],
             );
             const newProdList = newProdRows as Array<{ stock_actual: number }>;
@@ -168,11 +168,11 @@ export async function editInventoryMov(req: Request, res: Response) {
             );
 
             await conn.query(
-                "UPDATE productos SET stock_actual = ?, updated_at = NOW() WHERE id = ?",
+                "UPDATE productos SET stock_actual = ?, updated_at_p = NOW() WHERE id_p = ?",
                 [stockOldBase, oldProductId],
             );
             await conn.query(
-                "UPDATE productos SET stock_actual = ?, updated_at = NOW() WHERE id = ?",
+                "UPDATE productos SET stock_actual = ?, updated_at_p = NOW() WHERE id_p = ?",
                 [stockNuevo, newProductId],
             );
         }

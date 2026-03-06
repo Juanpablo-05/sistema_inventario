@@ -4,7 +4,7 @@ import ModalDeleteProducts from "../../components/modals/products/ModalDeletePro
 import DataTable, { type DataTableColumn } from "../../components/table/DataTable";
 import HeaderPages from "../../components/HeaderPages";
 
-import { useProductos } from "../../hooks/useProducts";
+import { useProductos } from "../../hooks/products/useProducts";
 import { formatDate } from "../../utils/normalize";
 import { useApi } from "../../context/ApiContext";
 

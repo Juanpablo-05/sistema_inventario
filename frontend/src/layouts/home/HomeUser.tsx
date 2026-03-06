@@ -1,6 +1,6 @@
-import { useCategorias } from "../../hooks/useCategorias";
-import { useProductos } from "../../hooks/useProducts";
-import { useUsers } from "../../hooks/useUsers";
+import { useCategorias } from "../../hooks/category/useCategorias";
+import { useProductos } from "../../hooks/products/useProducts";
+import { useUsers } from "../../hooks/users/useUsers";
 import {
   IoPeople,
   IoShieldCheckmark,
@@ -15,7 +15,7 @@ function HomeUser() {
   const { productos } = useProductos();
   const { currentUser, fetchUser, loading, error } = useUsers();
 
-  const stast = Number(currentUser?.numero_movimientos ?? 0);
+  const totalFacturas = Number(currentUser?.numero_facturas ?? 0);
 
   return (
     <section className="home-page">
@@ -70,8 +70,8 @@ function HomeUser() {
         <article className="home-stat-card">
           <IoRefresh size={22} />
           <div>
-            <h3>Tus movimientos</h3>
-            <p>{stast}</p>
+            <h3>Tus facturas</h3>
+            <p>{totalFacturas}</p>
           </div>
         </article>
       </section>
@@ -107,8 +107,8 @@ function HomeUser() {
             <span>{currentUser?.rol ?? "-"}</span>
           </div>
           <div className="movimientos">
-            <p>Movimientos realizados:</p>
-            <span>{currentUser?.numero_movimientos ?? "-"}</span>
+            <p>Facturaciones realizadas:</p>
+            <span>{currentUser?.numero_facturas ?? "-"}</span>
           </div>
         </article>
       </section>

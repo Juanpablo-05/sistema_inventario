@@ -67,8 +67,7 @@
       &:focus {
         outline: none;
         border-color: color-mix(in srgb, var(--color-btn-primary) 70%, #0ea5e9);
-        box-shadow: 0 0 0 3px
-          color-mix(in srgb, var(--color-btn-primary) 20%, transparent);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-btn-primary) 20%, transparent);
       }
     }
 
@@ -93,13 +92,13 @@
         transform 0.2s ease,
         opacity 0.2s ease;
 
-      &:hover {
+      &:hover:not(:disabled) {
         transform: translateY(-1px);
+      }
 
-        &:disabled {
-          opacity: 0.75;
-          cursor: wait;
-        }
+      &:disabled {
+        opacity: 0.75;
+        cursor: wait;
       }
     }
 
@@ -120,15 +119,13 @@
       }
     }
   }
-}
 
-@media (max-width: 560px) {
-  .register-page {
+  @media (max-width: 560px) {
     padding: 14px;
-  }
 
-  .register-card {
-    padding: 20px;
-    border-radius: 12px;
+    .register-card {
+      padding: 20px;
+      border-radius: 12px;
+    }
   }
 }
