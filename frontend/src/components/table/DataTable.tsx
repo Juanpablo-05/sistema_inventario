@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import "../../css/table/shared_table.css";
+
 export type DataTableColumn<T> = {
   key: string;
   header: ReactNode;

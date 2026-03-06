@@ -5,12 +5,15 @@ import HeaderPages from "../../components/HeaderPages";
 
 import { useMovements } from "../../hooks/movements/useMovements";
 import { formatDate } from "../../utils/normalize";
+import ModalDelete from "../../components/modals/movements/ModalDelete";
+import ModalEditMovements from "../../components/modals/movements/ModalEditMovements";
+
 
 import "../../css/movement_layout.css";
 import "../../css/table/shared_table.css";
 
 function MovementLayout() {
-  const { movements, loading, error, reload } = useMovements();
+  const { movements, loading, error, reload, updateMovement, deleteMovement } = useMovements();
 
   const columns: DataTableColumn<(typeof movements)[number]>[] = [
     {
@@ -59,7 +62,7 @@ function MovementLayout() {
     {
       key: "origen",
       header: "Origen",
-      render: (movement) => movement.origen_tipo
+      render: (movement) => movement.origen_tipo,
     },
     {
       key: "usuario_id",
@@ -75,6 +78,16 @@ function MovementLayout() {
       key: "fecha_movimiento",
       header: "Fecha",
       render: (movement) => formatDate(movement.fecha_movimiento),
+    },
+    {
+      key: "acciones",
+      header: "Acciones",
+      render: (movement) => (
+        <div>
+          <ModalEditMovements movement={movement} onEdit={updateMovement} />
+          <ModalDelete id={movement.id} onDelete={deleteMovement} />
+        </div>
+      ),
     },
   ];
 

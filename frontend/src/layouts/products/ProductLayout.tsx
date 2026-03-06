@@ -9,7 +9,6 @@ import { formatDate } from "../../utils/normalize";
 import { useApi } from "../../context/ApiContext";
 
 import "../../css/products/products_layout.css";
-import "../../css/table/shared_table.css";
 
 const CADUCIDAD_CATEGORY_KEYWORDS = ["alimentos", "belleza"];
 
@@ -78,13 +77,7 @@ function ProductLayout() {
             key: "acciones",
             header: "Acciones",
             render: (p: (typeof productos)[number]) => (
-              <div
-                style={{
-                  display: "flex",
-                  gap: 8,
-                  justifyContent: "center",
-                }}
-              >
+              <div>
                 <ModalEditProducts producto={p} onEdit={updateProduct} />
                 <ModalDeleteProducts id={p.id_p} nombre={p.nombre_p} onDelete={deleteProduct} />
               </div>

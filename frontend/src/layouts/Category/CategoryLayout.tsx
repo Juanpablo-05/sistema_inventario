@@ -9,7 +9,6 @@ import { useCategorias } from "../../hooks/category/useCategorias";
 import { useApi } from "../../context/ApiContext";
 
 import "../../css/category/category_layout.css";
-import "../../css/table/shared_table.css";
 
 function CategoryLayout() {
   const { categorias, loading, error, reload, createCategoria, deleteCategoria, updateCategoria } =
@@ -50,13 +49,7 @@ function CategoryLayout() {
             key: "acciones",
             header: "Acciones",
             render: (categoria: (typeof categorias)[number]) => (
-              <div
-                style={{
-                  display: "flex",
-                  gap: 8,
-                  justifyContent: "center",
-                }}
-              >
+              <div>
                 <ModalEdit categoria={categoria} onEdit={updateCategoria} />
                 <ModalDelete id={categoria.id} onDelete={deleteCategoria} />
               </div>

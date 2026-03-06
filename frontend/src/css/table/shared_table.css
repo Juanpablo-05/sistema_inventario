@@ -40,10 +40,16 @@
           background: var(--color-surface-hover);
           transition: background 0.3s ease;
         }
-      }
 
-      td {
-        padding: 12px;
+        td {
+          padding: 12px;
+
+          div{
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+          }
+        }
       }
     }
   }
