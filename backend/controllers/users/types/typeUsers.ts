@@ -4,6 +4,8 @@ type userRows = {
     email: string;
     password_hash: string;
     role: "admin" | "empleado";
+    estado?: "activo" | "inactivo";
+    permiso_factura?: "permitido" | "denegado";
 }
 
 type userRowsEdit = {
@@ -12,6 +14,8 @@ type userRowsEdit = {
     email?: string;
     password_hash?: string;
     role?: "admin" | "empleado";
+    estado?: "activo" | "inactivo";
+    permiso_factura?: "permitido" | "denegado";
 };
 
 type UserResponse = {
@@ -19,6 +23,8 @@ type UserResponse = {
     username: string;
     email: string;
     role: "admin" | "empleado";
+    estado: "activo" | "inactivo";
+    permiso_factura: "permitido" | "denegado";
     numero_movimientos: number;
     numero_facturas: number;
     created_at: string;

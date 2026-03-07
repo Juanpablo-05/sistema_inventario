@@ -8,7 +8,9 @@ type UserApiItem = {
     numero_documento: number | null;
     username: string;
     email: string | null;
+    estado: "activo" | "inactivo";
     rol: "admin" | "empleado";
+    permiso_factura: "permitido" | "denegado";
     numero_movimientos: number | null;
     numero_facturas: number | null;
     created_at?: string | null;
@@ -48,7 +50,9 @@ export function useUsers() {
                 numero_documento: userRow.numero_documento,
                 username: userRow.username,
                 email: userRow.email,
+                estado: userRow.estado,
                 rol: userRow.rol,
+                permiso_factura: userRow.permiso_factura,
                 numero_movimientos: userRow.numero_movimientos,
                 numero_facturas: userRow.numero_facturas,
             });

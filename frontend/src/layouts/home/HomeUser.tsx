@@ -15,8 +15,6 @@ function HomeUser() {
   const { productos } = useProductos();
   const { currentUser, fetchUser, loading, error } = useUsers();
 
-  const totalFacturas = Number(currentUser?.numero_facturas ?? 0);
-
   return (
     <section className="home-page">
       <header className="home-header">
@@ -70,8 +68,8 @@ function HomeUser() {
         <article className="home-stat-card">
           <IoRefresh size={22} />
           <div>
-            <h3>Tus facturas</h3>
-            <p>{totalFacturas}</p>
+            <h3>Estado de la cuenta</h3>
+            <p>{currentUser?.estado.toUpperCase() ?? "-"}</p>
           </div>
         </article>
       </section>
@@ -95,8 +93,8 @@ function HomeUser() {
             </span>
           </div>
           <div className="username">
-            <p>Username:</p>
-            <span>{currentUser?.username ?? "-"}</span>
+            <p>Permisos de Facturacion:</p>
+            <span>{currentUser?.permiso_factura.toUpperCase() ?? "-"}</span>
           </div>
           <div className="email">
             <p>Email:</p>

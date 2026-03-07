@@ -12,6 +12,8 @@ type UserRow = RowDataPacket & {
     email: string | null;
     password_hash: string;
     rol: "admin" | "empleado";
+    estado: "activo" | "inactivo";
+    permiso_factura: "permitido" | "denegado";
 };
 
 export async function login(req: Request, res: Response): Promise<void> {
@@ -35,12 +37,12 @@ export async function login(req: Request, res: Response): Promise<void> {
         const [rows] = await db
             .promise()
             .query<UserRow[]>(
-                "SELECT id, username, email, password_hash, rol FROM usuarios WHERE username = ? OR LOWER(email) = LOWER(?) LIMIT 1",
+                "SELECT id, username, email, password_hash, rol, estado, permiso_factura FROM usuarios WHERE (username = ? OR LOWER(email) = LOWER(?)) LIMIT 1",
                 [identifierInput, identifierInput],
             );
 
         const user = rows[0];
-        
+
         if (!user) {
             res.status(401).json({ error: "Las credenciales digitadas no coinciden con ninguna cuenta registrada" });
             return;
@@ -51,13 +53,19 @@ export async function login(req: Request, res: Response): Promise<void> {
             res.status(401).json({ error: "La contraseña ingresada no coincide con la registrada" });
             return;
         }
+        if (user.estado !== "activo") {
+            res.status(403).json({ error: "Tu cuenta está inactiva. Contacta al administrador." });
+            return;
+        }
 
         const principal = user.username ?? user.email ?? identifierInput;
 
         const token = signAccessToken({
             id: Number(user.id),
             username: String(principal),
-            role: String(user.rol),
+            role: user.rol,
+            estado: user.estado,
+            permiso_factura: user.permiso_factura,
         });
 
         res.status(200).json({
@@ -66,9 +74,13 @@ export async function login(req: Request, res: Response): Promise<void> {
             user: {
                 id: Number(user.id),
                 username: String(principal),
-                role: String(user.rol),
+                role: user.rol,
+                estado: user.estado,
+                permiso_factura: user.permiso_factura,
             },
         });
+
+
     } catch (error) {
         res.status(500).json({ error: "Error al autenticar usuario" , details: error instanceof Error ? error.message : String(error) });
     }

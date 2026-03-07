@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 export async function getUsers(req: Request, res: Response): Promise<void> { 
     try { 
         const [rows] = await db.promise().query(
-            "SELECT id, nombre, username, email, rol, numero_movimientos, numero_facturas, created_at, updated_at FROM usuarios",
+            "SELECT id, nombre, username, email, rol, estado, permiso_factura, numero_movimientos, numero_facturas, created_at, updated_at FROM usuarios",
         );
 
         res.json(rows);

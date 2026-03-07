@@ -78,3 +78,15 @@ export async function showErrorAlert(
     icon: "error",
   });
 }
+
+export async function showStateActiveAlert(
+  title: string,
+  text = "Tu cuenta está inactiva, no tienes acceso a este módulo.",
+): Promise<void> {
+  await fireAlert({
+    title,
+    text,
+    icon: "info",
+    confirmButtonText: "Entendido",
+  });
+}

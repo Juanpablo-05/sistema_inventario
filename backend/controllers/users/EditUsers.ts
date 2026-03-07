@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 export async function editUsers(req: Request, res: Response): Promise<void> { 
     const userId = req.params.id;
 
-    const { nombre, username, email, password_hash, role }: userRowsEdit = req.body;
+    const { nombre, username, email, password_hash, role, estado, permiso_factura }: userRowsEdit = req.body;
 
     if (!userId || isNaN(Number(userId))) {
         res.status(400).json({ error: "ID de usuario inválido" });
@@ -35,6 +35,14 @@ export async function editUsers(req: Request, res: Response): Promise<void> {
 
     if (role !== undefined && role !== "admin" && role !== "empleado") {
         res.status(400).json({ error: "El rol debe ser 'admin' o 'empleado'" });
+        return;
+    }
+    if (estado !== undefined && estado !== "activo" && estado !== "inactivo") {
+        res.status(400).json({ error: "El estado debe ser 'activo' o 'inactivo'" });
+        return;
+    }
+    if (permiso_factura !== undefined && permiso_factura !== "permitido" && permiso_factura !== "denegado") {
+        res.status(400).json({ error: "permiso_factura debe ser 'permitido' o 'denegado'" });
         return;
     }
 
@@ -66,6 +74,14 @@ export async function editUsers(req: Request, res: Response): Promise<void> {
     if (role !== undefined) {
         fields.push("rol = ?");
         params.push(role);
+    }
+    if (estado !== undefined) {
+        fields.push("estado = ?");
+        params.push(estado);
+    }
+    if (permiso_factura !== undefined) {
+        fields.push("permiso_factura = ?");
+        params.push(permiso_factura);
     }
 
     if (!fields.length) {

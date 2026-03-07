@@ -8,7 +8,9 @@ const JWT_EXPIRES_IN = (process.env.JWT_EXPIRES_IN as jwt.SignOptions["expiresIn
 export type AuthUserPayload = {
     id: number;
     username: string;
-    role: string;
+    role: "admin" | "empleado";
+    estado: "activo" | "inactivo";
+    permiso_factura: "permitido" | "denegado";
 };
 
 export type AuthRequest = Request & {
@@ -38,7 +40,9 @@ export function verifyToken(req: Request, res: Response, next: NextFunction): vo
         (req as AuthRequest).user = {
             id: Number(decoded.id),
             username: String(decoded.username),
-            role: String(decoded.role),
+            role: String(decoded.role) as "admin" | "empleado",
+            estado: String(decoded.estado) as "activo" | "inactivo",
+            permiso_factura: String(decoded.permiso_factura) as "permitido" | "denegado",
         };
         next();
     } catch (error) {

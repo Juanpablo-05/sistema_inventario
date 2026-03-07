@@ -10,6 +10,8 @@ type AuthUser = {
   id: number;
   username: string;
   role: "admin" | "empleado";
+  estado: "activo" | "inactivo";
+  permiso_factura: "permitido" | "denegado";
 };
 
 type LoginInput = {

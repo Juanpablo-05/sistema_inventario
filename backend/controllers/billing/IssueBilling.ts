@@ -109,13 +109,27 @@ export async function issueBilling(req: Request, res: Response) {
         await conn.beginTransaction();
 
         const [userRows] = await conn.query(
-            "SELECT id FROM usuarios WHERE id = ? LIMIT 1",
+            "SELECT id, rol, estado, permiso_factura FROM usuarios WHERE id = ? LIMIT 1",
             [userId],
         );
-        const userList = userRows as Array<{ id: number }>;
+        const userList = userRows as Array<{
+            id: number;
+            rol: "admin" | "empleado";
+            estado: "activo" | "inactivo";
+            permiso_factura: "permitido" | "denegado";
+        }>;
         if (userList.length === 0) {
             await conn.rollback();
             return res.status(404).json({ error: "Usuario no encontrado" });
+        }
+        const user = userList[0];
+        if (user.estado !== "activo") {
+            await conn.rollback();
+            return res.status(403).json({ error: "Tu cuenta está inactiva, no puedes facturar" });
+        }
+        if (user.rol === "empleado" && user.permiso_factura !== "permitido") {
+            await conn.rollback();
+            return res.status(403).json({ error: "No tienes permiso para generar facturas" });
         }
 
         const invoiceNumber = await resolveInvoiceNumber(conn, numero_factura);
