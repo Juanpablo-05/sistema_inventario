@@ -1,6 +1,7 @@
 .table_category,
 .table_products,
-.table_movements {
+.table_movements,
+.table_billing {
   width: 90%;
   flex: 1;
   min-height: 0;
@@ -13,7 +14,7 @@
 
   .data-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
     text-align: left;
     background: var(--color-surface);
     border-radius: 8px;

@@ -1,5 +1,3 @@
-import { useEffect, useRef } from "react";
-
 import CategoryLayout from "./layouts/Category/CategoryLayout";
 import ProductLayout from "./layouts/products/ProductLayout";
 import MovementLayout from "./layouts/movements/MovementLayout";
@@ -9,48 +7,16 @@ import RegisterLayout from "./layouts/auth/RegisterLayout";
 import PageTransition from "./components/PageTransition";
 import ResetPassword from "./layouts/auth/ResetPassword";
 import HomeUser from "./layouts/home/HomeUser";
-import BillingLayout from "./layouts/billing/BillingLayout";
-import { showStateActiveAlert } from "./utils/alerts";
+import BillingRouteGate from "./layouts/billing/utils/BillingRouteGate";
 
 import { AnimatePresence } from "motion/react";
-import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import PrivateRoute from "./routes/PrivateRoute";
 import { AppShell } from "./components/SideBar";
 import { useApi } from "./context/ApiContext";
 
 import "./css/side_bar/side_bar.css";
 
-function BillingRouteGate() {
-  const { user } = useApi();
-  const navigate = useNavigate();
-  const alertShownRef = useRef(false);
-  const isActive = user?.estado === "activo";
-  const hasBillingPermission =
-    user?.role === "admin" || user?.permiso_factura === "permitido";
-  const canAccessBilling = isActive && hasBillingPermission;
-
-  const accessMessage = !isActive
-    ? "No puedes acceder a facturación porque tu cuenta está inactiva."
-    : "No tienes permiso para generar facturas.";
-
-  useEffect(() => {
-    if (canAccessBilling) {
-      alertShownRef.current = false;
-      return;
-    }
-
-    if (alertShownRef.current) return;
-    alertShownRef.current = true;
-
-    void (async () => {
-      await showStateActiveAlert("Acceso restringido", accessMessage);
-      navigate("/", { replace: true });
-    })();
-  }, [accessMessage, canAccessBilling, navigate]);
-
-  if (!canAccessBilling) return null;
-  return <BillingLayout />;
-}
 
 function App() {
   const location = useLocation();

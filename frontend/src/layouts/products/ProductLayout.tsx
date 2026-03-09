@@ -7,23 +7,9 @@ import HeaderPages from "../../components/HeaderPages";
 import { useProductos } from "../../hooks/products/useProducts";
 import { formatDate } from "../../utils/normalize";
 import { useApi } from "../../context/ApiContext";
+import { requiresCaducidadByCategoryName } from "./utils/producUtils";
 
 import "../../css/products/products_layout.css";
-
-const CADUCIDAD_CATEGORY_KEYWORDS = ["alimentos", "belleza"];
-
-function normalizeText(value: string): string {
-  return value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim();
-}
-
-function requiresCaducidadByCategoryName(categoryName: string): boolean {
-  const normalized = normalizeText(categoryName);
-  return CADUCIDAD_CATEGORY_KEYWORDS.some((keyword) => normalized.includes(keyword));
-}
 
 function ProductLayout() {
   const { productos, loading, error, reload, createProduct, updateProduct, deleteProduct } = useProductos();
