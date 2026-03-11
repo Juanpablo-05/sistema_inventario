@@ -1,88 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { useApi } from "../../context/ApiContext";
 
-type BillingApiItem = {
-  id: number;
-  numero_factura: string;
-  usuario_id: number;
-  cliente_nombre: string | null;
-  cliente_documento: string | null;
-  observaciones: string | null;
-  subtotal: number | string;
-  impuesto: number | string;
-  total: number | string;
-  estado: "emitida" | "anulada";
-  fecha_emision: string;
-  created_at?: string | null;
-  updated_at?: string | null;
-};
-
-type BillingDetailApiItem = {
-  id: number;
-  factura_id: number;
-  producto_id: number;
-  producto_nombre: string;
-  cantidad: number | string;
-  precio_unitario: number | string;
-  descuento: number | string;
-  impuesto_linea: number | string;
-  total_linea: number | string;
-};
-
-type IssueBillingInput = {
-  numero_factura?: string;
-  cliente_nombre?: string;
-  cliente_documento?: string;
-  observaciones?: string;
-  fecha_emision?: string;
-  items: Array<{
-    producto_id: number;
-    cantidad: number;
-    precio_unitario: number;
-    descuento?: number;
-    impuesto_linea?: number;
-  }>;
-};
-
-type BillingIssueResponse = {
-  factura_id: number;
-  numero_factura: string;
-  subtotal: number;
-  impuesto: number;
-  total: number;
-  items: number;
-  message: string;
-};
-
-type BillingDetailsResponse = {
-  billing_details: BillingDetailApiItem[];
-};
-
-export type Billing = {
-  id: number;
-  numero_factura: string;
-  usuario_id: number;
-  cliente_nombre: string | null;
-  cliente_documento: string | null;
-  observaciones: string | null;
-  subtotal: number;
-  impuesto: number;
-  total: number;
-  estado: "emitida" | "anulada";
-  fecha_emision: string;
-};
-
-export type BillingDetail = {
-  id: number;
-  factura_id: number;
-  producto_id: number;
-  producto_nombre: string;
-  cantidad: number;
-  precio_unitario: number;
-  descuento: number;
-  impuesto_linea: number;
-  total_linea: number;
-};
+import type{
+  Billing,
+  BillingApiItem,
+  BillingDetail,
+  BillingDetailsResponse,
+  BillingIssueResponse,
+  IssueBillingInput,
+  UpdateBillingInput,
+} from "./types/TypesBilling";
 
 export function useBilling() {
   const { request } = useApi();
@@ -152,6 +79,29 @@ export function useBilling() {
     [fetchBillings, request],
   );
 
+  const updateBilling = useCallback(
+    async (id: number, payload: UpdateBillingInput): Promise<void> => {
+      setError(null);
+      await request(`/billing/edit/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      });
+      await fetchBillings();
+    },
+    [fetchBillings, request],
+  );
+
+  const deleteBilling = useCallback(
+    async (id: number): Promise<void> => {
+      setError(null);
+      await request(`/billing/delete/${id}`, {
+        method: "DELETE",
+      });
+      await fetchBillings();
+    },
+    [fetchBillings, request],
+  );
+
   useEffect(() => {
     void fetchBillings();
   }, [fetchBillings]);
@@ -163,5 +113,7 @@ export function useBilling() {
     reload: fetchBillings,
     issueBilling,
     getBillingDetails,
+    updateBilling,
+    deleteBilling,
   };
 }

@@ -5,12 +5,15 @@ import DataTable, { type DataTableColumn } from "../../../components/table/DataT
 import { useBilling } from "../../../hooks/billing/useBilling";
 import { formatDate } from "../../../utils/normalize";
 import { useUsers } from "../../../hooks/users/useUsers";
+import ModalEditBilling from "../../../components/modals/billing/ModalEditBilling";
+import ModalDeleteBilling from "../../../components/modals/billing/ModalDeleteBilling";
+import ModalViewBilling from "../../../components/modals/billing/ModalViewBilling";
 
 import '../../../css/billing/billing_admin.css';
 
 
 function BillingAdminLayout() {
-    const { billings, reload, loading } = useBilling();
+    const { billings, reload, loading, updateBilling, deleteBilling, getBillingDetails } = useBilling();
     const { currentUsers, fetchAllUsers } = useUsers();
 
     useEffect(() => {
@@ -70,7 +73,29 @@ function BillingAdminLayout() {
             key: 'fecha',
             header: 'Fecha',
             render: (billing) => formatDate(billing.fecha_emision)
-        }
+        },
+        {
+            key: "acciones",
+            header: "Acciones",
+            render: (billing) => {
+                const user = userById.get(billing.usuario_id);
+                return (
+                    <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
+                        <ModalViewBilling
+                            billing={billing}
+                            userName={user?.nombre ?? user?.username}
+                            getDetails={getBillingDetails}
+                        />
+                        <ModalEditBilling billing={billing} onEdit={updateBilling} />
+                        <ModalDeleteBilling
+                            id={billing.id}
+                            numeroFactura={billing.numero_factura}
+                            onDelete={deleteBilling}
+                        />
+                    </div>
+                );
+            },
+        },
     ];
 
   return (
