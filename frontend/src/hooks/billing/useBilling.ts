@@ -11,6 +11,8 @@ import type{
   UpdateBillingInput,
 } from "./types/TypesBilling";
 
+export type { Billing, BillingDetail, UpdateBillingInput } from "./types/TypesBilling";
+
 export function useBilling() {
   const { request } = useApi();
   const [billings, setBillings] = useState<Billing[]>([]);

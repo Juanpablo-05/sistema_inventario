@@ -1,23 +1,6 @@
 import { useApi } from "../../context/ApiContext";
 import { useCallback, useEffect, useState } from "react";
-
-type UserApiItem = {
-    id: number;
-    nombre: string | null;
-    tipo_documento: "CC" | "CE" | "TI" | "RC" | null;
-    numero_documento: number | null;
-    username: string;
-    email: string | null;
-    estado: "activo" | "inactivo";
-    rol: "admin" | "empleado";
-    permiso_factura: "permitido" | "denegado";
-    numero_movimientos: number | null;
-    numero_facturas: number | null;
-    created_at?: string | null;
-    updated_at?: string | null;
-};
-
-type UsersResponse = UserApiItem[];
+import type { CreateUserInput, UpdateUserInput, UserApiItem, UsersResponse } from "../users/types/UserTypes";
 
 export function useUsers() { 
     const { request, user } = useApi();
@@ -86,6 +69,8 @@ export function useUsers() {
                 permiso_factura: userRow.permiso_factura,
                 numero_movimientos: userRow.numero_movimientos ?? null,
                 numero_facturas: userRow.numero_facturas ?? null,
+                created_at: userRow.created_at ?? null,
+                updated_at: userRow.updated_at ?? null,
             })));
          }catch (error) {
             setError("Error fetching users");
@@ -94,9 +79,60 @@ export function useUsers() {
         }
     }, [request])
 
+    const createUser = useCallback(
+        async (input: CreateUserInput) => {
+            setError(null);
+            await request("/users/create", {
+                method: "POST",
+                body: JSON.stringify(input),
+            });
+            await fetchAllUsers();
+        },
+        [fetchAllUsers, request],
+    );
+
+    const updateUser = useCallback(
+        async (id: number, input: UpdateUserInput) => {
+            setError(null);
+            await request(`/users/edit/${id}`, {
+                method: "PUT",
+                body: JSON.stringify(input),
+            });
+            await fetchAllUsers();
+            if (user?.id === id) {
+                await fetchUser();
+            }
+        },
+        [fetchAllUsers, fetchUser, request, user?.id],
+    );
+
+    const deleteUser = useCallback(
+        async (id: number) => {
+            setError(null);
+            await request(`/users/delete/${id}`, {
+                method: "DELETE",
+            });
+            await fetchAllUsers();
+            if (user?.id === id) {
+                await fetchUser();
+            }
+        },
+        [fetchAllUsers, fetchUser, request, user?.id],
+    );
+
     useEffect(() => {
         void fetchUser();
     }, [fetchUser]);
 
-    return { currentUser, currentUsers, loading, error, fetchUser, fetchAllUsers };
+    return {
+        currentUser,
+        currentUsers,
+        loading,
+        error,
+        fetchUser,
+        fetchAllUsers,
+        createUser,
+        updateUser,
+        deleteUser,
+    };
 }

@@ -84,10 +84,32 @@
     flex-direction: column;
     gap: 10px;
 
-    h2 {
-      margin: 0;
-      color: var(--color-text);
-      font-size: 20px;
+    .home-users-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+
+      h2 {
+        margin: 0;
+        color: var(--color-text);
+        font-size: 20px;
+      }
+
+      .home-users-create-btn {
+        border: none;
+        border-radius: 10px;
+        padding: 10px 14px;
+        background: var(--color-btn-primary);
+        color: var(--color-text);
+        transition:
+          transform 0.2s ease,
+          opacity 0.2s ease;
+
+        &:hover {
+          transform: translateY(-1px);
+        }
+      }
     }
 
     .home-users-table-wrapper {
@@ -122,6 +144,12 @@
         td {
           padding: 10px;
           border-bottom: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
+        }
+
+        .home-user-actions {
+          display: flex;
+          align-items: center;
+          gap: 8px;
         }
 
         .home-error {
