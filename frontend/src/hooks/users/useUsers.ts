@@ -2,6 +2,11 @@ import { useApi } from "../../context/ApiContext";
 import { useCallback, useEffect, useState } from "react";
 import type { CreateUserInput, UpdateUserInput, UserApiItem, UsersResponse } from "../users/types/UserTypes";
 
+type DeleteUserResponse = {
+    message: string;
+    action: "deleted" | "deactivated";
+};
+
 export function useUsers() { 
     const { request, user } = useApi();
     const [currentUser, setCurrentUser] = useState<
@@ -109,13 +114,14 @@ export function useUsers() {
     const deleteUser = useCallback(
         async (id: number) => {
             setError(null);
-            await request(`/users/delete/${id}`, {
+            const response = await request<DeleteUserResponse>(`/users/delete/${id}`, {
                 method: "DELETE",
             });
             await fetchAllUsers();
             if (user?.id === id) {
                 await fetchUser();
             }
+            return response;
         },
         [fetchAllUsers, fetchUser, request, user?.id],
     );

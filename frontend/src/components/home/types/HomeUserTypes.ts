@@ -32,13 +32,18 @@ type UpdateUserInput = {
   permiso_factura?: "permitido" | "denegado";
 };
 
+type DeleteUserResult = {
+  message: string;
+  action: "deleted" | "deactivated";
+};
+
 type UserActionProps = {
   users: UserItem[];
   error: string | null;
   onCreate: (input: CreateUserInput) => Promise<void>;
   onEdit: (id: number, input: UpdateUserInput) => Promise<void>;
-  onDelete: (id: number) => Promise<void>;
+  onDelete: (id: number) => Promise<DeleteUserResult>;
 };
 
 
-export type { UserItem, CreateUserInput, UpdateUserInput, UserActionProps };
+export type { UserItem, CreateUserInput, UpdateUserInput, DeleteUserResult, UserActionProps };

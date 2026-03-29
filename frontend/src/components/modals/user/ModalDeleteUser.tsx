@@ -6,35 +6,41 @@ import {
   showSuccessAlert,
   confirmDangerAction,
 } from "../../../utils/alerts";
+import type { DeleteUserResult } from "../../home/types/HomeUserTypes";
 
 type ModalDeleteUserProps = {
   id: number;
   nombre?: string | null;
   username: string;
-  onDelete: (id: number) => Promise<void>;
+  onDelete: (id: number) => Promise<DeleteUserResult>;
 };
 
 function ModalDeleteUser({
   id,
   nombre,
+  username,
   onDelete,
 }: ModalDeleteUserProps) {
   const [deleting, setDeleting] = useState(false);
+  const displayName = nombre?.trim() || username;
 
   async function handleDeleteConfirm() {
     if (deleting) return;
 
     const confirmed = await confirmDangerAction({
       title: "Eliminar usuario",
-      text: `Se eliminará al usuario "${nombre}". Esta acción no se puedodra deshacer.`,
+      text: `Se eliminará al usuario "${displayName}". Esta acción no se podrá deshacer.`,
     });
 
     if (!confirmed) return;
 
     setDeleting(true);
     try {
-      await onDelete(id);
-      await showSuccessAlert("Usuario eliminado");
+      const result = await onDelete(id);
+      await showSuccessAlert(
+        result.action === "deactivated" ? "Usuario desactivado" : "Usuario eliminado",
+        result.message,
+      );
     } catch (error) {
       await showErrorAlert(error, "No se pudo eliminar");
     } finally {
